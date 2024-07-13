@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_BASE_URL = 'https://cdtn-backend-ecommerce.fly.dev/';
+export const API_BASE_URL = 'https://cosmetic-web-project-production.up.railway.app/';
 
 // Hàm để lấy token từ localStorage
 export const getTokenFromLocalStorage = () => {

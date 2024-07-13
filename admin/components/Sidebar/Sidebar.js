@@ -1,16 +1,18 @@
+import { useState, useEffect } from "react";
 import { For, If } from "react-haiku";
 import SidebarItem from "./SidebarItem";
 import Profile from "./Profile";
 import SidebarItemWithChildren from "./SidebarItemWithChildren";
 import { ChartPieIcon, BanknotesIcon, ReceiptPercentIcon, UsersIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 
 const adminNavigation = [
   { name: "Trang chủ", href: "/dashboard", icon: ChartPieIcon, current: false },
   {
     name: "Quản lý sản phẩm", href: "", icon: BanknotesIcon, current: false, children: [
-      { name: 'Danh sách sản phẩm', href: '/financialManagement/revenueManagement', current: false },
-      { name: 'Danh sách nhãn hàng', href: '/financialManagement/sponsorManagement', current: false },
-      { name: 'Danh sách danh mục', href: '/financialManagement/expenseManagement', current: false },
+      { name: 'Danh sách sản phẩm', href: '/products', current: false },
+      { name: 'Danh sách nhãn hàng', href: '/brands', current: false },
+      { name: 'Danh sách danh mục', href: '/categories', current: false },
     ],
   },
   {
@@ -23,6 +25,24 @@ const adminNavigation = [
 ];
 
 export default function Sidebar() {
+  const [auth, setAuth] = useState();
+  let value;
+  if (typeof window !== "undefined") {
+    value = JSON.parse(localStorage.getItem("userInformation")) || null;
+  }
+  useEffect(() => {
+    // Get the value from local storage if it exists
+    setAuth(value.user);
+  }, []);
+  function redirect() {
+    window.location.href = '/'
+  }
+  function handleLogout() {
+    setAuth("");
+    localStorage.clear();
+    toast.success("Bạn đã đăng xuất");
+    setTimeout(redirect, 1000)
+  }
   return (
     <div className="flex flex-row w-1/6 h-full">
       <div className="flex flex-col flex-1 h-screen min-h-0 bg-gray-800">
@@ -50,7 +70,7 @@ export default function Sidebar() {
 
           </nav>
         </div>
-        <Profile />
+        <Profile user={auth} logout={handleLogout} />
       </div>
     </div>
   );

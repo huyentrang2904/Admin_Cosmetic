@@ -58,10 +58,11 @@ export const getAllBrand = () => async (dispatch) => {
   dispatch({ type: GET_ALL_BRAND_REQUEST });
 
   try {
-    const { data } = await axios.get(`${API_BASE_URL}admin/brands/get-all?size=${100}`);
+    const { data } = await axios.get(`${API_BASE_URL}admin/brand/get-all`);
     dispatch({ type: GET_ALL_BRAND_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ALL_BRAND_FAILURE, payload: error.message });
+    console.log(error)
   }
 };
 
@@ -96,7 +97,7 @@ export const getFavoriteList = () => async (dispatch) => {
   }
 }
 
-export const addProductToFavoriteList = (id) => async(dispatch) => {
+export const addProductToFavoriteList = (id) => async (dispatch) => {
   dispatch({ type: ADD_PRODUCT_TO_FAVORITE_LIST_REQUEST })
   try {
     const { data } = await api.get(`${API_BASE_URL}user/favorites/add?productId=${id}`)
@@ -108,7 +109,7 @@ export const addProductToFavoriteList = (id) => async(dispatch) => {
   }
 }
 
-export const deleteProductFromFavoriteList = (id) => async(dispatch) => {
+export const deleteProductFromFavoriteList = (id) => async (dispatch) => {
   dispatch({ type: DELETE_PRODUCT_FROM_FAVORITE_LIST_REQUEST })
   try {
     const { data } = await api.get(`${API_BASE_URL}user/favorites/remove?productId=${id}`)

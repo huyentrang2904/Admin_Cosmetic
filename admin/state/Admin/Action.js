@@ -105,11 +105,9 @@ export const addNewBrand = (req) => async (dispatch) => {
 };
 
 export const updateBrand = (req) => async (dispatch) => {
-  const id = req.id
-  const name = req.title
   dispatch({ type: UPDATE_BRAND_REQUEST });
   try {
-    const { data } = await api.put(`admin/brands/update/${id}?name=${name}`);
+    const { data } = await api.put(`admin/brand/update`, req);
     dispatch({ type: UPDATE_BRAND_SUCCESS, payload: data });
     toast.success("Sửa thành công");
     setTimeout(refresh, 1000);
