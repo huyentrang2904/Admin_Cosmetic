@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBrand } from "@/state/Products/Action";
-import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useState, useEffect } from "react";
 import BasicModal from "../Modal/BasicModal";
 import DeleteBrand from "./DeleteBrand";
 import UpdateBrand from "./UpdateBrand";
+import ViewBrand from "./ViewBrand";
 
 export default function BrandsTable() {
   const dispatch = useDispatch();
   const brands = useSelector((state) => state.product?.brand);
   const [openDelete, setOpenDelete] = useState(false)
   const [openUpdate, setOpenUpdate] = useState(false)
+  const [openView, setOpenView] = useState(false)
   const [id, setId] = useState()
   const [initB, setInitB] = useState()
 
@@ -18,7 +19,7 @@ export default function BrandsTable() {
     dispatch(getAllBrand());
   }, []);
   return (
-    <div id='root' className="flex flex-col mt-8 overflow-y-scroll h-[90vh]">
+    <div id='root' className="flex flex-col mt-4 overflow-y-scroll h-[90vh]">
       {/* <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8"> */}
       <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8 ">
         <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg ">
@@ -43,29 +44,37 @@ export default function BrandsTable() {
             <tbody className="bg-white divide-y divide-gray-200 ">
               {brands?.map((data, index) => (
                 <>
-                  <tr className="">
+                  <tr key={index} className="">
                     <td className="py-4 pr-10 text-base font-medium text-left text-gray-900 whitespace-nowrap sm:pl-6 ">
                       {index + 1}
                     </td>
                     <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                       {data.name}
                     </td>
+                    
                     <td className="flex px-3 py-4 text-base text-gray-500 whitespace-nowrap">
-                      <PencilSquareIcon
+                      <button
+                        onClick={() => {
+                          setOpenView(true);
+                          setInitB(data);
+                        }}
+                        className="mr-4 py-1 px-2 border-2 border-dark-purple rounded-full text-sm hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
+                      >Xem</button>
+                      <button
                         onClick={() => {
                           setOpenUpdate(true);
-                          setId(data.id);
-                          setInitB(data.title);
+                          setInitB(data);
                         }}
-                        className="w-8 h-8 mr-4 hover:cursor-pointer hover:opacity-50 text-dark-purple"
-                      />
-                      <TrashIcon
+                        className="py-1 px-2 mr-4 border-2 border-dark-purple rounded-full text-sm hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
+                      >Sửa</button>
+
+                      <button
                         onClick={() => {
                           setOpenDelete(true);
                           setId(data.id);
                         }}
-                        className="w-8 h-8 text-red-400 hover:cursor-pointer hover:opacity-50"
-                      />
+                        className=" hover:bg-red-400 border-red-400 border-2 px-2 py-1 rounded-full hover:text-white text-red-400 "
+                      >Xóa</button>
                     </td>
 
                   </tr>
@@ -80,7 +89,13 @@ export default function BrandsTable() {
             <UpdateBrand
               open={openUpdate}
               onClose={() => setOpenUpdate(false)}
-              data={id}
+              brand={initB}
+            />
+          </BasicModal>
+          <BasicModal open={openView} onClose={() => setOpenView(false)}>
+            <ViewBrand
+              open={openView}
+              onClose={() => setOpenView(false)}
               brand={initB}
             />
           </BasicModal>

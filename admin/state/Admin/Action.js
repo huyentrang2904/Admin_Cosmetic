@@ -48,57 +48,56 @@ import {
   GET_ALL_ROLE_REQUEST,
   GET_ALL_ROLE_SUCCESS,
   GET_ALL_ROLE_FAILURE,
-  CREATE_ROLE_REQUEST,
+
   DELETE_ROLE_REQUEST,
   DELETE_ROLE_SUCCESS,
   DELETE_ROLE_FAILURE,
-  CREATE_NEW_COUPCON_FAILURE, 
-  CREATE_NEW_COUPCON_REQUEST, 
+  CREATE_NEW_COUPCON_FAILURE,
+  CREATE_NEW_COUPCON_REQUEST,
   CREATE_NEW_COUPCON_SUCCESS,
   GET_ALL_COUPCON_FAILURE,
   GET_ALL_COUPCON_REQUEST,
-  GET_ALL_COUPCON_SUCCESS, 
-  DELETE_COUPCON_FAILURE, 
-  DELETE_COUPCON_SUCCESS, 
-  DELETE_COUPCON_REQUEST, 
-  UPDATE_COUPCON_FAILURE, 
-  UPDATE_COUPCON_REQUEST, 
+  GET_ALL_COUPCON_SUCCESS,
+  DELETE_COUPCON_FAILURE,
+  DELETE_COUPCON_SUCCESS,
+  DELETE_COUPCON_REQUEST,
+  UPDATE_COUPCON_FAILURE,
+  UPDATE_COUPCON_REQUEST,
   UPDATE_COUPCON_SUCCESS,
-  CREATE_SUB_ADMIN_ACCOUNT_FAILURE, 
-  CREATE_SUB_ADMIN_ACCOUNT_REQUEST, 
-  CREATE_SUB_ADMIN_ACCOUNT_SUCCESS, 
-  REMOVE_ACCOUNT_FAILURE, 
-  REMOVE_ACCOUNT_REQUEST, 
+  CREATE_SUB_ADMIN_ACCOUNT_FAILURE,
+  CREATE_SUB_ADMIN_ACCOUNT_REQUEST,
+  CREATE_SUB_ADMIN_ACCOUNT_SUCCESS,
+  REMOVE_ACCOUNT_FAILURE,
+  REMOVE_ACCOUNT_REQUEST,
   REMOVE_ACCOUNT_SUCCESS,
-  EDIT_ACCOUNT_FAILURE, 
-  EDIT_ACCOUNT_REQUEST, 
+  EDIT_ACCOUNT_FAILURE,
+  EDIT_ACCOUNT_REQUEST,
   EDIT_ACCOUNT_SUCCESS,
   GET_ALL_PRODUCT_REQUEST,
   GET_ALL_PRODUCT_SUCCESS,
   GET_ALL_PRODUCT_FAILURE,
   CHANGE_ACCOUNT_STATUS_FAILURE,
   CHANGE_ACCOUNT_STATUS_REQUEST,
-  CHANGE_ACCOUNT_STATUS_SUCCESS, 
+  CHANGE_ACCOUNT_STATUS_SUCCESS,
   RESET_PASSWORD_FAILURE,
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
   GET_ORDER_BY_ID_REQUEST,
   GET_ORDER_BY_ID_SUCCESS,
-  GET_ORDER_BY_ID_FAILURE
+  GET_ORDER_BY_ID_FAILURE,
+  CREATE_ROLE_SUCCESS,
+  CREATE_ROLE_FAILURE,
+  CREATE_ROLE_REQUEST,
 } from "./ActionType";
 import { toast } from "react-toastify";
-import { CREATE_NEW_ADDRESS_FAILURE, CREATE_NEW_ADDRESS_SUCCESS } from "../Auth/ActionType";
 import axios from "axios";
-import { apiBaseUrl } from "next-auth/client/_utils";
 
 export const addNewBrand = (req) => async (dispatch) => {
-  req = req.title
   dispatch({ type: ADD_BRAND_REQUEST });
   try {
-    const { data } = await api.post(`admin/brands/create?name=${req}`);
+    const { data } = await axios.post(`${API_BASE_URL}admin/brand/create`, req);
     dispatch({ type: ADD_BRAND_SUCCESS, payload: data });
     toast.success("Thêm nhãn hàng thành công");
-    setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: ADD_BRAND_FAILURE, payload: e });
   }
@@ -107,10 +106,9 @@ export const addNewBrand = (req) => async (dispatch) => {
 export const updateBrand = (req) => async (dispatch) => {
   dispatch({ type: UPDATE_BRAND_REQUEST });
   try {
-    const { data } = await api.put(`admin/brand/update`, req);
+    const { data } = await axios.put(`${API_BASE_URL}admin/brand/update`, req);
     dispatch({ type: UPDATE_BRAND_SUCCESS, payload: data });
     toast.success("Sửa thành công");
-    setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: UPDATE_BRAND_FAILURE, payload: e.message });
     console.log(e)
@@ -247,10 +245,10 @@ export const createRole = (req) => async (dispatch) => {
   console.log(req)
   try {
     const { data } = await api.post(`/admin/role/add?permissionIdList=${req.permissionIdList}&roleName=${req.roleName}`);
-    dispatch({ type: CREATE_NEW_ADDRESS_SUCCESS, payload: data });
+    dispatch({ type: CREATE_ROLE_SUCCESS, payload: data });
     toast.success("Thêm vai trò thành công");
   } catch (e) {
-    dispatch({ type: CREATE_NEW_ADDRESS_FAILURE, payload: e.message });
+    dispatch({ type: CREATE_ROLE_FAILURE, payload: e.message });
     console.log(e)
   }
 }
@@ -333,7 +331,7 @@ export const updateCoupcon = (req) => async (dispatch) => {
 
 export const createSubAdmin = (req) => async (dispatch) => {
   dispatch({ type: CREATE_SUB_ADMIN_ACCOUNT_REQUEST });
-  req=req.userName
+  req = req.userName
   try {
     const { data } = await api.post(`admin/account/create?userName=${req}`);
 
@@ -360,7 +358,7 @@ export const deleteAccount = (id) => async (dispatch) => {
 export const updateAccount = (req) => async (dispatch) => {
   dispatch({ type: EDIT_ACCOUNT_REQUEST });
   try {
-    const { data } = await api.put(`admin/account/update?userId=${req.uId}&roleId=${req.rId}`, );
+    const { data } = await api.put(`admin/account/update?userId=${req.uId}&roleId=${req.rId}`,);
     dispatch({ type: EDIT_ACCOUNT_SUCCESS, payload: data });
     toast.success("Sửa thành công");
     // setTimeout(refresh, 1000);
@@ -373,7 +371,7 @@ export const updateAccount = (req) => async (dispatch) => {
 
 export const addNewProduct = (req) => async (dispatch) => {
   dispatch({ type: ADD_NEW_PRODUCT_REQUEST });
-  
+
   try {
     const formData = new FormData();
     formData.append("title", req.title);
@@ -425,10 +423,8 @@ export const getAllProduct = (req) => async (dispatch) => {
   dispatch({ type: GET_ALL_PRODUCT_REQUEST });
   try {
     const { data } = await axios.get(
-      `${API_BASE_URL}admin/product/get-all?${
-        req?.brand ? `brandName=${req?.brand}&` : ""
-      }${req?.category ? `categoryName=${req?.category}&` : ""}${
-        req?.minPrice ? `minPrice=${req?.minPrice}&` : ""
+      `${API_BASE_URL}admin/product/get-all?${req?.brand ? `brandName=${req?.brand}&` : ""
+      }${req?.category ? `categoryName=${req?.category}&` : ""}${req?.minPrice ? `minPrice=${req?.minPrice}&` : ""
       }${req?.maxPrice ? `maxPrice=${req?.maxPrice}&` : ""}${`size=${1000}`}`
     );
     dispatch({ type: GET_ALL_PRODUCT_SUCCESS, payload: data });
@@ -439,7 +435,7 @@ export const getAllProduct = (req) => async (dispatch) => {
 };
 
 
-export const updateProduct = (productId,req) => async (dispatch) => {
+export const updateProduct = (productId, req) => async (dispatch) => {
   dispatch({ type: UPDATE_PRODUCT_REQUEST });
   try {
     const formData = new FormData();
@@ -449,7 +445,7 @@ export const updateProduct = (productId,req) => async (dispatch) => {
     formData.append("brandId", req.brandId);
     formData.append("categoryId", req.categoryId);
 
-    if(req.multipartFiles) {
+    if (req.multipartFiles) {
       req.multipartFiles.forEach((file, index) => {
         formData.append("multipartFiles", file, file.name);
       });
@@ -479,7 +475,7 @@ export const updateAccountStatus = (id) => async (dispatch) => {
   dispatch({ type: CHANGE_ACCOUNT_STATUS_REQUEST });
   console.log(id)
   try {
-    const { data } = await api.put(`admin/account/change-status?userId=${id}`, );
+    const { data } = await api.put(`admin/account/change-status?userId=${id}`,);
     dispatch({ type: CHANGE_ACCOUNT_STATUS_SUCCESS, payload: data });
     toast.success("Thay đổi thành công");
     // setTimeout(refresh, 1000);
@@ -492,7 +488,7 @@ export const updateAccountStatus = (id) => async (dispatch) => {
 export const resetPassword = (id) => async (dispatch) => {
   dispatch({ type: RESET_PASSWORD_REQUEST });
   try {
-    const { data } = await api.put(`admin/account/reset-password?userId=${id}`, );
+    const { data } = await api.put(`admin/account/reset-password?userId=${id}`,);
     dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data });
     toast.success("Thay đổi thành công");
     // setTimeout(refresh, 1000);

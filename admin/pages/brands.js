@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import BrandsTable from '@/components/Brands/BrandsTable'
 import BaseTemplate from '@/components/BaseTemplate'
+import BasicModal from '@/components/Modal/BasicModal'
+import AddBrand from '@/components/Brands/AddBrand'
 
 export default function brands() {
+    const [openAdd, setOpenAdd] = useState(false)
     return (
         <BaseTemplate>
             <div className="h-full py-4 bg-white">
@@ -16,7 +19,7 @@ export default function brands() {
                         </div>
                         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                             <button
-                                onClick={() => setAddNewEvent(true)}
+                                onClick={() => setOpenAdd(true)}
                                 type="button"
                                 className="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                             >
@@ -28,10 +31,9 @@ export default function brands() {
                 <BrandsTable></BrandsTable>
             </div>
 
-            {/* <AddEvent
-                    onClose={() => setAddNewEvent(false)}
-                    isVisible={addNewEvent}
-                /> */}
+            <BasicModal open={openAdd} onClose={() => setOpenAdd(false)}>
+                <AddBrand open={openAdd} onClose={() => setOpenAdd(false)} />
+            </BasicModal>
 
         </BaseTemplate>
     )
