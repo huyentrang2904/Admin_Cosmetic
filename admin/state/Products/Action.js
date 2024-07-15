@@ -70,7 +70,7 @@ export const getAllCategory = () => async (dispatch) => {
   dispatch({ type: GET_ALL_CATEGORY_REQUEST });
 
   try {
-    const { data } = await axios.get(`${API_BASE_URL}admin/categories/get-all?size=${100}`);
+    const { data } = await axios.get(`${API_BASE_URL}admin/category/get-all`);
     dispatch({ type: GET_ALL_CATEGORY_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ALL_CATEGORY_FAILURE, payload: error.message });

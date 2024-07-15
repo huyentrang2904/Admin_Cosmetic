@@ -132,7 +132,7 @@ export const deleteBrand = (brandId) => async (dispatch) => {
 export const addNewCategory = (req) => async (dispatch) => {
   dispatch({ type: ADD_CATEGORY_REQUEST });
   try {
-    const { data } = await apiFormData.post("admin/categories/upload", req);
+    const { data } = await axios.post(`${API_BASE_URL}admin/category/create`, req);
 
     dispatch({ type: ADD_CATEGORY_SUCCESS, payload: data });
     toast.success("Thêm thành công");
@@ -144,26 +144,24 @@ export const addNewCategory = (req) => async (dispatch) => {
 };
 
 export const updateCategory = (req) => async (dispatch) => {
-  const { id, ...data_t } = req;
-  const formdata = new FormData();
-  formdata.append("name", data_t.name);
   // formdata.append('multipartFile', fs.createReadStream('/path/to/file'));
   dispatch({ type: UPDATE_CATEGORY_REQUEST });
   try {
-    const { data } = await apiFormData.put(`admin/categories/update/${req.id}`, formdata);
+    const { data } = await axios.put(`${API_BASE_URL}admin/category/update`, req);
     dispatch({ type: UPDATE_CATEGORY_SUCCESS, payload: data });
     toast.success("Sửa thành công");
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: UPDATE_CATEGORY_FAILURE, payload: e });
-    console.log(e);
+    console.log(e)
+    toast.error(e);
   }
 };
 
 export const deleteCategory = (categoryId) => async (dispatch) => {
   dispatch({ type: DELETE_CATEGORY_REQUEST });
   try {
-    const { data } = api.delete(`admin/categories/delete/${categoryId}`);
+    const { data } = await axios.delete(`${API_BASE_URL}admin/category/delete/${categoryId}`);
     dispatch({ type: DELETE_CATEGORY_SUCCESS, payload: data });
     toast.success("Xóa thành công");
     // setTimeout(refresh, 1000);
