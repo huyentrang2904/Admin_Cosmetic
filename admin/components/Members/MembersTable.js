@@ -1,21 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getAllRole } from "@/state/Admin/Action";
+import { getAllUser } from "@/state/Admin/Action";
 import { useState, useEffect } from "react";
+// import BasicModal from "../Modal/BasicModal";
+// import DeleteCategory from "./DeleteCategory";
+// import UpdateCategory from "./UpdateCategory";
 import { If } from "react-haiku";
-import BasicModal from "../Modal/BasicModal";
-import DeleteRole from "./DeleteCategory";
-import AddRole from "./AddRole";
 
-export default function RolesTable() {
+export default function MembersTable() {
   const dispatch = useDispatch();
-  const brands = useSelector((state) => state?.admin.roles);
+  const brands = useSelector((state) => state?.admin.allUser);
+  console.log(brands)
   const [openDelete, setOpenDelete] = useState(false)
   const [openUpdate, setOpenUpdate] = useState(false)
   const [id, setId] = useState()
   const [initB, setInitB] = useState()
 
   useEffect(() => {
-    dispatch(getAllRole());
+    dispatch(getAllUser());
   }, []);
   return (
     <div id='root' className="flex flex-col mt-4 overflow-y-scroll h-[90vh]">
@@ -35,29 +36,37 @@ export default function RolesTable() {
                   scope="col"
                   className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                 >
-                  Role's name
+                  Member's username
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                >
+                  Member's role
                 </th>
                 <th className="w-1/12"></th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 ">
               {brands?.map((data, index) => (
-                <>
-                  <tr key={index} className="">
-                    <td className="py-4 pr-10 text-base font-medium text-left text-gray-900 whitespace-nowrap sm:pl-6 ">
-                      {index + 1}
-                    </td>
-                    <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
-                      {data.roleName}
-                    </td>
+                <If isTrue={data.roleId !== 2}>
 
-                    <td className="flex px-3 py-4 text-base text-gray-500 whitespace-nowrap">
-                      <If isTrue={data.roleName !== 'ADMIN' && data.roleName !== 'USER'}>
+                  <>
+                    <tr key={index} className="">
+                      <td className="py-4 pr-10 text-base font-medium text-left text-gray-900 whitespace-nowrap sm:pl-6 ">
+                        {index + 1}
+                      </td>
+                      <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
+                        {data.userName}
+                      </td>
+                      <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
+                        {data.userName}
+                      </td>
+                      <td className="flex px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                         <button
                           onClick={() => {
                             setOpenUpdate(true);
                             setInitB(data);
-                            setId(data.id)
                           }}
                           className="px-2 py-1 mr-4 text-sm border-2 rounded-full border-dark-purple hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
                         >Update</button>
@@ -69,26 +78,25 @@ export default function RolesTable() {
                           }}
                           className="px-2 py-1 text-red-400 border-2 border-red-400 rounded-full hover:bg-red-400 hover:text-white"
                         >Delete</button>
-                      </If>
-                    </td>
+                      </td>
 
-                  </tr>
-                </>
+                    </tr>
+                  </>
+                </If>
               ))}
+
             </tbody>
           </table>
-          <BasicModal open={openDelete} onClose={() => setOpenDelete(false)}>
-            <DeleteRole onClose={() => setOpenDelete(false)} data={id} />
+          {/* <BasicModal open={openDelete} onClose={() => setOpenDelete(false)}>
+            <DeleteCategory onClose={() => setOpenDelete(false)} data={id} />
           </BasicModal>
           <BasicModal open={openUpdate} onClose={() => setOpenUpdate(false)}>
-            <AddRole
+            <UpdateCategory
               open={openUpdate}
               onClose={() => setOpenUpdate(false)}
-              data={id}
-              roleName={initB?.roleName}
-              permissions={initB?.permissions}
+              brand={initB}
             />
-          </BasicModal>
+          </BasicModal> */}
 
         </div>
       </div>

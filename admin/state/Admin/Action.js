@@ -173,7 +173,7 @@ export const deleteCategory = (categoryId) => async (dispatch) => {
 export const getAllUser = () => async (dispatch) => {
   dispatch({ type: GET_ALL_USER_REQUEST });
   try {
-    const { data } = await api.get(`admin/account/get-all`);
+    const { data } = await api.get(`user/get-all`);
     dispatch({ type: GET_ALL_USER_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ALL_USER_FAILURE, payload: error.message });
@@ -239,9 +239,9 @@ export const getAllRole = () => async (dispatch) => {
 
 export const createRole = (req) => async (dispatch) => {
   dispatch({ type: CREATE_ROLE_REQUEST });
-  console.log(req)
+  
   try {
-    const { data } = await api.post(`/admin/role/create?roleName=${req.roleName}&permissionIdList=${req.permissionIdList}`);
+    const { data } = await api.post(`admin/role/create?roleName=${req.roleName}&permissionIds=${req.permissionIdList}`);
     dispatch({ type: CREATE_ROLE_SUCCESS, payload: data });
     toast.success("Add new role successfully");
   } catch (e) {
@@ -253,7 +253,7 @@ export const createRole = (req) => async (dispatch) => {
 export const updateRole = (req) => async (dispatch) => {
   dispatch({ type: CHANGE_ROLE_REQUEST });
   try {
-    const { data } = await api.put(`/admin/role/update?roleName=${req?.roleName}&permissionIdList=${req?.permissionIdList}&roleId=${req?.roleId}`);
+    const { data } = await api.put(`admin/role/update?roleId=${req?.roleId}&roleName=${req?.roleName}&permissionIds=${req?.permissionIdList}`);
     dispatch({ type: CHANGE_ROLE_SUCCESS, payload: data });
     toast.success("Update successfully!");
     // setTimeout(refresh, 1000);

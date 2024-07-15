@@ -32,8 +32,8 @@ const AddRole = (props) => {
       setError("Role's name is required.");
       return;
     } else {
-      const roleData = { roleName: role, permissionIdList: selectedPermissions };
-      if (props.data) {
+      const roleData = { roleName: role, permissionIdList: selectedPermissions.join(',') };
+      if (props.data !== undefined) {
         dispatch(updateRole({ ...roleData, roleId: props.data }));
       } else {
         dispatch(createRole(roleData));
@@ -41,7 +41,7 @@ const AddRole = (props) => {
 
       setTimeout(() => {
         dispatch(getAllRole());
-      }, 2000);
+      }, 1000);
     }
   };
 
