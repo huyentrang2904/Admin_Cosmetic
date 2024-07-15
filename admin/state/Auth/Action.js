@@ -38,28 +38,23 @@ export const login = (userData) => async (dispatch) => {
     const response = await axios.post(`${API_BASE_URL}api/auth/login`, userData);
     const user = response.data;
     localStorage.setItem('userInformation', JSON.stringify(user))
-    toast.success("Đăng nhập thành công!");
+    localStorage.setItem('userToken', JSON.stringify(user.accessToken))
+    toast.success("Login successfully!");
     dispatch({ type: LOGIN_SUCCESS, payload: user });
     window.location = "/dashboard";
   } catch (error) {
     dispatch({ type: LOGIN_FAILURE, payload: error });
-    toast.error("Sai tài khoản hoặc mặt khẩu");
+    toast.error("Username or password is wrong");
   }
 };
 
-export const logout = () => (dispatch) => {
-  dispatch({ type: LOGOUT, payload: null });
-  localStorage.clear();
-  toast.success("Bạn đã đăng xuất!");
-  setTimeout(window.location.href = '/', 1000)
-};
-
 export const changePassword = (req) => async (dispatch) => {
+  console.log(req)
   dispatch({ type: CHANGE_PASSWORD_REQUEST })
   try {
-    const { data } = await api.put(`${API_BASE_URL}api/auth/update-profile`, req);
+    const { data } = await axios.put(`${API_BASE_URL}user/update`, req);
     dispatch({ type: CHANGE_PASSWORD_SUCCESS, payload: data });
-    toast.success("Thay đổi mật khẩu thành công!");
+    toast.success("Changed passwood successfully!");
   } catch (error) {
     dispatch({ type: CHANGE_PASSWORD_FAILURE, payload: error });
     console.log(error.response)
