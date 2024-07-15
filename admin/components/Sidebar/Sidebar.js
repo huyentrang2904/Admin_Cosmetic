@@ -3,7 +3,7 @@ import { For, If } from "react-haiku";
 import SidebarItem from "./SidebarItem";
 import Profile from "./Profile";
 import SidebarItemWithChildren from "./SidebarItemWithChildren";
-import { ChartPieIcon, BanknotesIcon, ReceiptPercentIcon, UsersIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { ChartPieIcon, BanknotesIcon, ReceiptPercentIcon, UsersIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 
 const adminNavigation = [
@@ -21,7 +21,9 @@ const adminNavigation = [
       { name: 'Quản lý thành viên', href: '/members', current: false },
     ],
   },
-  { name: "Quản lý mã giảm giá", href: "/questionsAndAnswers/questionsAndAnswers", icon: ReceiptPercentIcon, current: false },
+  { name: "Quản lý mã giảm giá", href: "/coupcons", icon: ReceiptPercentIcon, current: false },
+  { name: "Quản lý đơn hàng", href: "/orders", icon: ShoppingCartIcon, current: false },
+
 ];
 
 export default function Sidebar() {
