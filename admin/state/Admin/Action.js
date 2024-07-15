@@ -118,7 +118,7 @@ export const updateBrand = (req) => async (dispatch) => {
 export const deleteBrand = (brandId) => async (dispatch) => {
   dispatch({ type: DELETE_BRAND_REQUEST });
   try {
-    const { data } = api.delete(`admin/brands/delete/${brandId}`);
+    const { data } = await axios.delete(`${API_BASE_URL}admin/brand/delete/${brandId}`);
     dispatch({ type: DELETE_BRAND_SUCCESS, payload: data });
     toast.success("Xóa thành công");
     // setTimeout(refresh, 1000);

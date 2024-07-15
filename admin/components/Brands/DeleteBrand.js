@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
 const DeleteBrand = (props) => {
+  console.log(props)
   const dispatch = useDispatch();
   const handleDelete = () => {
-    dispatch(deleteBrand(props.data));
-    setTimeout(() => {
+    dispatch(deleteBrand(props.data)).then((value) => {
       dispatch(getAllBrand());
-    }, 2000);
+      setTimeout(props.onClose, 200);
+      // Expected output: "Success!"
+    });;
   };
   return (
     <div id="root">
@@ -22,7 +24,6 @@ const DeleteBrand = (props) => {
             className="p-2 px-6 bg-white border-2 text-dark-purple hover:bg-dark-purple hover:text-white border-dark-purple rounded-2xl"
             onClick={() => {
               handleDelete();
-              setTimeout(props.onClose, 200);
             }}
           >
             Xác nhận
