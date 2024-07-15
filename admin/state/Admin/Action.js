@@ -220,7 +220,7 @@ export const getDataAnalytic = () => async (dispatch) => {
 export const getAllPermission = () => async (dispatch) => {
   dispatch({ type: GET_ALL_PERMISSION_REQUEST });
   try {
-    const { data } = await api.get(`/admin/permission/get-all`);
+    const { data } = await api.get(`admin/role/permission/get-all`);
     dispatch({ type: GET_ALL_PERMISSION_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ALL_PERMISSION_FAILURE, payload: error.message });
@@ -230,8 +230,7 @@ export const getAllPermission = () => async (dispatch) => {
 export const getAllRole = () => async (dispatch) => {
   dispatch({ type: GET_ALL_ROLE_REQUEST });
   try {
-    const { data } = await api.get(`/admin/role/get-all`);
-    console.log(data)
+    const { data } = await api.get(`admin/role/get-all`);
     dispatch({ type: GET_ALL_ROLE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ALL_ROLE_FAILURE, payload: error.message });
@@ -242,9 +241,9 @@ export const createRole = (req) => async (dispatch) => {
   dispatch({ type: CREATE_ROLE_REQUEST });
   console.log(req)
   try {
-    const { data } = await api.post(`/admin/role/add?permissionIdList=${req.permissionIdList}&roleName=${req.roleName}`);
+    const { data } = await api.post(`/admin/role/create?roleName=${req.roleName}&permissionIdList=${req.permissionIdList}`);
     dispatch({ type: CREATE_ROLE_SUCCESS, payload: data });
-    toast.success("Thêm vai trò thành công");
+    toast.success("Add new role successfully");
   } catch (e) {
     dispatch({ type: CREATE_ROLE_FAILURE, payload: e.message });
     console.log(e)
@@ -256,7 +255,7 @@ export const updateRole = (req) => async (dispatch) => {
   try {
     const { data } = await api.put(`/admin/role/update?roleName=${req?.roleName}&permissionIdList=${req?.permissionIdList}&roleId=${req?.roleId}`);
     dispatch({ type: CHANGE_ROLE_SUCCESS, payload: data });
-    toast.success("Sửa thành công");
+    toast.success("Update successfully!");
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: CHANGE_ROLE_FAILURE, payload: e.message });
@@ -267,9 +266,9 @@ export const updateRole = (req) => async (dispatch) => {
 export const deleteRole = (roleId) => async (dispatch) => {
   dispatch({ type: DELETE_ROLE_REQUEST });
   try {
-    const { data } = await api.delete(`/admin/role/delete/${roleId}`);
+    const { data } = await api.delete(`admin/role/delete/${roleId}`);
     dispatch({ type: DELETE_ROLE_SUCCESS, payload: data });
-    toast.success("Xóa thành công");
+    toast.success("Delete successfully!");
   } catch (e) {
     dispatch({ type: DELETE_ROLE_FAILURE, payload: e.message });
     toast.error(e?.response?.data);

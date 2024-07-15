@@ -17,8 +17,8 @@ const adminNavigation = [
   },
   {
     name: "Quản lý phân quyền", href: "", icon: UsersIcon, current: false, children: [
-      { name: 'Quản lý phân quyền', href: '/permissionsManagement', current: false },
-      { name: 'Quản lý thành viên', href: '/permissionsManagement/userManagement', current: false },
+      { name: 'Quản lý quyền', href: '/roles', current: false },
+      { name: 'Quản lý thành viên', href: '/members', current: false },
     ],
   },
   { name: "Quản lý mã giảm giá", href: "/questionsAndAnswers/questionsAndAnswers", icon: ReceiptPercentIcon, current: false },
