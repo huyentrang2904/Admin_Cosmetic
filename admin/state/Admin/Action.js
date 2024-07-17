@@ -278,7 +278,7 @@ export const deleteRole = (roleId) => async (dispatch) => {
 export const addNewCoupcon = (req) => async (dispatch) => {
   dispatch({ type: CREATE_NEW_COUPCON_REQUEST });
   try {
-    const { data } = await api.post("admin/coupons/create", req);
+    const { data } = await axios.post(`${API_BASE_URL}admin/discount/create`, req);
 
     dispatch({ type: CREATE_NEW_COUPCON_SUCCESS, payload: data });
     toast.success("Thêm thành công");
@@ -292,7 +292,7 @@ export const addNewCoupcon = (req) => async (dispatch) => {
 export const getAllCoupcon = () => async (dispatch) => {
   dispatch({ type: GET_ALL_COUPCON_REQUEST });
   try {
-    const { data } = await api.get(`admin/coupons/get-all`);
+    const { data } = await axios.get(`${API_BASE_URL}admin/discount/get-all`);
     dispatch({ type: GET_ALL_COUPCON_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ALL_COUPCON_FAILURE, payload: error.message });
@@ -302,12 +302,14 @@ export const getAllCoupcon = () => async (dispatch) => {
 export const deleteCoupcon = (id) => async (dispatch) => {
   dispatch({ type: DELETE_COUPCON_REQUEST });
   try {
-    const { data } = api.delete(`admin/coupons/delete/${id}`);
+    const { data } = await axios.delete(`${API_BASE_URL}admin/discount/delete/${id}`);
     dispatch({ type: DELETE_COUPCON_SUCCESS, payload: data });
-    toast.success("Xóa thành công");
+    toast.success("Delete successfully");
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: DELETE_COUPCON_FAILURE, payload: e.message });
+    console.log(e)
+    toast.error('Failed')
   }
 };
 
@@ -372,29 +374,26 @@ export const addNewProduct = (req) => async (dispatch) => {
     const formData = new FormData();
     formData.append("title", req.title);
     formData.append("description", req.description);
-    formData.append("discountPercent", req.discountPercent);
-    formData.append("brandId", req.brandId);
-    formData.append("categoryId", req.categoryId);
+    formData.append("currentCost", req.currentCost); // Corrected to match backend field name
+    formData.append("madeIn", req.madeIn); // Corrected to match backend field name
+    formData.append("capacity", req.capacity); // Corrected to match backend field name
+    formData.append("quantity", req.quantity); // Corrected to match backend field name
+    formData.append("brandId", req.brandId); // Corrected to match backend field name (case sensitive)
+    formData.append("category_id", req.category_id); // Corrected to match backend field name (case sensitive)
+    formData.append("discount_id", req.discount_id); // Corrected to match backend field name (case sensitive)
+    formData.append("productStatus", req.productStatus); // Corrected to match backend field name (case sensitive)
 
     req.multipartFiles.forEach((file, index) => {
       formData.append("multipartFiles", file, file.name);
     });
 
-    formData.append("optionRequestDtoList", JSON.stringify(req.optionRequestDtoList));
-    formData.append("variantsRequestDtoList", JSON.stringify(req.variantsRequestDtoList));
-
-    const { data } = await apiFormData.post('admin/product/create', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
+    const { data } = await apiFormData.post('admin/product/create', formData);
     dispatch({ type: ADD_NEW_PRODUCT_SUCCESS, payload: data });
-    toast.success("Thêm thành công");
+    toast.success("Add product successfully");
     console.log(data);
   } catch (error) {
     dispatch({ type: ADD_NEW_PRODUCT_FAILURE, payload: error.response.data });
-    toast.error("Thêm thất bại");
+    toast.error("Failed");
     console.log(error);
   }
 };
