@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import MembersTable from '@/components/Members/MembersTable'
 import BaseTemplate from '@/components/BaseTemplate'
 import BasicModal from '@/components/Modal/BasicModal'
-import AddRole from '@/components/Roles/AddRole'
-import { Add } from '@mui/icons-material'
+import AddMember from '@/components/Members/AddMember'
 
 export default function members() {
     const [openAdd, setOpenAdd] = useState(false)
@@ -32,9 +31,9 @@ export default function members() {
                 <MembersTable></MembersTable>
             </div>
 
-            {/* <BasicModal open={openAdd} onClose={() => setOpenAdd(false)}>
-                <AddRole open={openAdd} onClose={() => setOpenAdd(false)}/>
-            </BasicModal> */}
+            <BasicModal open={openAdd} onClose={() => setOpenAdd(false)}>
+                <AddMember open={openAdd} onClose={() => setOpenAdd(false)}/>
+            </BasicModal>
 
         </BaseTemplate>
     )

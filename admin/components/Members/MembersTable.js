@@ -1,19 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUser } from "@/state/Admin/Action";
 import { useState, useEffect } from "react";
-// import BasicModal from "../Modal/BasicModal";
-// import DeleteCategory from "./DeleteCategory";
-// import UpdateCategory from "./UpdateCategory";
+import BasicModal from "../Modal/BasicModal";
 import { If } from "react-haiku";
+import DeleteMember from "./DeleteMember";
+import UpdateRole from "./UpdateRole";
+import ChangeMemberPassword from "./ChangeMemberPassword";
 
 export default function MembersTable() {
   const dispatch = useDispatch();
   const brands = useSelector((state) => state?.admin.allUser);
-  console.log(brands)
+  const memberList = brands?.filter((item) => item.roleName !== 'USER');
   const [openDelete, setOpenDelete] = useState(false)
   const [openUpdate, setOpenUpdate] = useState(false)
+  const [openChange, setOpenChange] = useState(false)
   const [id, setId] = useState()
-  const [initB, setInitB] = useState()
 
   useEffect(() => {
     dispatch(getAllUser());
@@ -48,8 +49,8 @@ export default function MembersTable() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 ">
-              {brands?.map((data, index) => (
-                <If isTrue={data.roleId !== 2}>
+              {memberList?.map((data, index) => (
+                <If isTrue={data.roleName !== "USER"}>
 
                   <>
                     <tr key={index} className="">
@@ -60,24 +61,34 @@ export default function MembersTable() {
                         {data.userName}
                       </td>
                       <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
-                        {data.userName}
+                        {data.roleName}
                       </td>
                       <td className="flex px-3 py-4 text-base text-gray-500 whitespace-nowrap">
+                        <If isTrue={data.roleName !== "ADMIN"}>
                         <button
-                          onClick={() => {
-                            setOpenUpdate(true);
-                            setInitB(data);
-                          }}
-                          className="px-2 py-1 mr-4 text-sm border-2 rounded-full border-dark-purple hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
-                        >Update</button>
+                            onClick={() => {
+                              setOpenUpdate(true);
+                              setId(data.id);
+                            }}
+                            className="px-2 py-1 mr-4 text-sm border-2 rounded-full border-dark-purple hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
+                          >Change</button>
+                          <button
+                            onClick={() => {
+                              setOpenUpdate(true);
+                              setId(data.id);
+                            }}
+                            className="px-2 py-1 mr-4 text-sm border-2 rounded-full border-dark-purple hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
+                          >Update</button>
 
-                        <button
-                          onClick={() => {
-                            setOpenDelete(true);
-                            setId(data.id);
-                          }}
-                          className="px-2 py-1 text-red-400 border-2 border-red-400 rounded-full hover:bg-red-400 hover:text-white"
-                        >Delete</button>
+                          <button
+                            onClick={() => {
+                              setOpenDelete(true);
+                              setId(data.id);
+                            }}
+                            className="px-2 py-1 text-red-400 border-2 border-red-400 rounded-full hover:bg-red-400 hover:text-white"
+                          >Delete</button>
+                        </If>
+
                       </td>
 
                     </tr>
@@ -87,16 +98,19 @@ export default function MembersTable() {
 
             </tbody>
           </table>
-          {/* <BasicModal open={openDelete} onClose={() => setOpenDelete(false)}>
-            <DeleteCategory onClose={() => setOpenDelete(false)} data={id} />
+          <BasicModal open={openDelete} onClose={() => setOpenDelete(false)}>
+            <DeleteMember onClose={() => setOpenDelete(false)} data={id} />
           </BasicModal>
           <BasicModal open={openUpdate} onClose={() => setOpenUpdate(false)}>
-            <UpdateCategory
+            <UpdateRole open={openUpdate} onClose={() => setOpenUpdate(false)} data={id} />
+          </BasicModal>
+          <BasicModal open={openUpdate} onClose={() => setOpenUpdate(false)}>
+            <ChangeMemberPassword
               open={openUpdate}
               onClose={() => setOpenUpdate(false)}
-              brand={initB}
+              data={id}
             />
-          </BasicModal> */}
+          </BasicModal>
 
         </div>
       </div>
