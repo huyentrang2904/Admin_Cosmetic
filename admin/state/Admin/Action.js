@@ -48,7 +48,6 @@ import {
   GET_ALL_ROLE_REQUEST,
   GET_ALL_ROLE_SUCCESS,
   GET_ALL_ROLE_FAILURE,
-
   DELETE_ROLE_REQUEST,
   DELETE_ROLE_SUCCESS,
   DELETE_ROLE_FAILURE,
@@ -173,7 +172,7 @@ export const deleteCategory = (categoryId) => async (dispatch) => {
 export const getAllUser = () => async (dispatch) => {
   dispatch({ type: GET_ALL_USER_REQUEST });
   try {
-    const { data } = await api.get(`user/get-all`);
+    const { data } = await api.get(`user/admin/get-all`);
     dispatch({ type: GET_ALL_USER_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ALL_USER_FAILURE, payload: error.message });
@@ -184,7 +183,7 @@ export const getAllUser = () => async (dispatch) => {
 export const getAllOrders = () => async (dispatch) => {
   dispatch({ type: GET_ALL_ORDERS_REQUEST });
   try {
-    const { data } = await api.get(`/admin/order/get-all`);
+    const { data } = await api.get(`admin/order/get-all`);
     dispatch({ type: GET_ALL_ORDERS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ALL_ORDERS_FAILURE, payload: error.message });
@@ -192,12 +191,12 @@ export const getAllOrders = () => async (dispatch) => {
 };
 
 export const updateOrderStatus = (req) => async (dispatch) => {
+  console.log(req)
   dispatch({ type: UPDATE_ORDER_STATUS_REQUEST });
   try {
-    const { data } = await api.put(`admin/order/update-status?orderId=${req.id}&status=${req.status}`);
-    console.log(`admin/order/update-status?orderId=${req.id}&status=${req.status}`)
+    const { data } = await api.put(`admin/order/update-status?orderId=${req.oId}&status=${req.status}`);
     dispatch({ type: UPDATE_ORDER_STATUS_SUCCESS, payload: data });
-    toast.success("Sửa thành công");
+    toast.success("Update status successfully");
   } catch (e) {
     dispatch({ type: UPDATE_ORDER_STATUS_FAILURE, payload: e.message });
     console.log(e);
@@ -328,11 +327,11 @@ export const updateCoupcon = (req) => async (dispatch) => {
 
 export const createSubAdmin = (req) => async (dispatch) => {
   dispatch({ type: CREATE_SUB_ADMIN_ACCOUNT_REQUEST });
-  req = req.userName
   try {
-    const { data } = await api.post(`admin/account/create?userName=${req}`);
+    const { data } = await api.post(`user/admin/create-user`, req);
 
     dispatch({ type: CREATE_SUB_ADMIN_ACCOUNT_SUCCESS, payload: data });
+    toast.success('Create account successfully')
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: CREATE_SUB_ADMIN_ACCOUNT_FAILURE, payload: e.message });
@@ -343,21 +342,21 @@ export const createSubAdmin = (req) => async (dispatch) => {
 export const deleteAccount = (id) => async (dispatch) => {
   dispatch({ type: REMOVE_ACCOUNT_REQUEST });
   try {
-    const { data } = api.delete(`admin/account/delete/${id}`);
+    const { data } = await api.delete(`user/admin/delete-user/${id}`);
     dispatch({ type: REMOVE_ACCOUNT_SUCCESS, payload: data });
-    toast.success("Xóa thành công");
+    toast.success("Delete account succesfully");
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: REMOVE_ACCOUNT_FAILURE, payload: e.message });
   }
 };
 
-export const updateAccount = (req) => async (dispatch) => {
+export const updateRoleAccount = (req) => async (dispatch) => {
   dispatch({ type: EDIT_ACCOUNT_REQUEST });
   try {
-    const { data } = await api.put(`admin/account/update?userId=${req.uId}&roleId=${req.rId}`,);
+    const { data } = await api.put(`user/admin/change-role/${req.uId}/${req.rId}`,);
     dispatch({ type: EDIT_ACCOUNT_SUCCESS, payload: data });
-    toast.success("Sửa thành công");
+    toast.success("Update account succesfully");
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: EDIT_ACCOUNT_FAILURE, payload: e });
@@ -482,12 +481,12 @@ export const updateAccountStatus = (id) => async (dispatch) => {
   }
 };
 
-export const resetPassword = (id) => async (dispatch) => {
+export const resetPassword = (req) => async (dispatch) => {
   dispatch({ type: RESET_PASSWORD_REQUEST });
   try {
-    const { data } = await api.put(`admin/account/reset-password?userId=${id}`,);
+    const { data } = await api.put(`user/admin/reset-password`, req);
     dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data });
-    toast.success("Thay đổi thành công");
+    toast.success("Change successfully");
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: RESET_PASSWORD_FAILURE, payload: e });
@@ -500,7 +499,7 @@ export const getOrderById = (orderId) => async (dispatch) => {
   dispatch({ type: GET_ORDER_BY_ID_REQUEST });
 
   try {
-    const { data } = await api.get(`/user/orders/${orderId}`);
+    const { data } = await api.get(`admin/order/get-by-id/${orderId}`);
     dispatch({ type: GET_ORDER_BY_ID_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_ORDER_BY_ID_FAILURE, payload: error.message });
