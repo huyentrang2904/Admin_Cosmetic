@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBrand, getAllCategory, getProducts, getSingleProduct } from '@/state/Products/Action';
-import { addNewProduct, getAllProductCoupcon } from '@/state/Admin/Action';
+import { updateProduct, getAllProductCoupcon } from '@/state/Admin/Action';
 import { useDropzone } from 'react-dropzone';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useForm } from 'react-hook-form';
@@ -26,7 +26,7 @@ export default function UpdateProduct(props) {
             capacity: productT?.displayProductDTO.capacity,
             brandId: productT?.displayProductDTO.brandId,
             categoryId: productT?.displayProductDTO.categoryId,
-            
+            discountId: productT?.displayProductDTO.discountId
         }
     });
     const brands = useSelector((state) => state.product?.brand || []);
@@ -38,6 +38,7 @@ export default function UpdateProduct(props) {
     const [data, setData] = useState({
         multipartFiles: imgArr || [],
     });
+    const [imageIdDelete, setImageIdDelete] = useState([]);
 
     const handleDrop = (acceptedFiles) => {
         const filesWithPreview = acceptedFiles.map(file => Object.assign(file, {
@@ -48,6 +49,9 @@ export default function UpdateProduct(props) {
     };
 
     const handleRemoveFile = (file) => {
+        if (file.id) {
+            setImageIdDelete(prev => [...prev, file.id]);
+        }
         const updatedFiles = fileInputs.filter(f => f !== file);
         const updatedMultipartFiles = data.multipartFiles.filter(f => f !== file);
         setFileInputs(updatedFiles);
@@ -67,16 +71,17 @@ export default function UpdateProduct(props) {
     }, [dispatch]);
 
     const onSubmit = async (formData) => {
-        formData.discount_id = ''
-        console.log(data)
-        // const submitData = {
-        //     ...formData,
-        //     multipartFiles: fileInputs,
-        // };
-        // await dispatch(addNewProduct(submitData)).then((value) => {
-        //     props.onClose();
-        //     dispatch(getProducts())
-        // });
+        formData.id = productT?.displayProductDTO.id
+        formData.imageIdDelete = imageIdDelete.join(',')
+        const submitData = {
+            ...formData,
+            multipartFiles: fileInputs,
+        };
+        console.log(submitData)
+        await dispatch(updateProduct(submitData)).then((value) => {
+            props.onClose();
+            dispatch(getProducts())
+        });
     };
 
     if (props.open && productT) {
