@@ -11,26 +11,8 @@ import {
   CHANGE_PASSWORD_SUCCESS
 } from "./ActionType";
 import { getSingleRole } from "../Admin/Action";
-import { API_BASE_URL, api } from "@/config/apiConfig";
+import { API_BASE_URL } from "@/config/apiConfig";
 import { toast } from "react-toastify";
-
-function redirect() {
-  window.location.href = '/login'
-}
-
-export const register = (userData) => async (dispatch) => {
-  dispatch({ type: REGISTER_REQUEST });
-  try {
-    const response = await axios.post(`${API_BASE_URL}api/auth/signup`, userData);
-    const user = response.data;
-    dispatch({ type: REGISTER_SUCCESS, payload: user });
-    toast.success("Đăng ký thành công!");
-    setTimeout(redirect, 1000)
-  } catch (error) {
-    dispatch({ type: REGISTER_FAILURE, payload: error });
-    toast.error(error?.response?.data.message);
-  }
-};
 
 export const login = (userData) => async (dispatch) => {
   dispatch({ type: LOGIN_REQUEST });
@@ -47,7 +29,7 @@ export const login = (userData) => async (dispatch) => {
     window.location = "/dashboard";
   } catch (error) {
     dispatch({ type: LOGIN_FAILURE, payload: error });
-    toast.error("Username or password is wrong");
+    toast.error(e.response.data);
   }
 };
 
