@@ -81,7 +81,10 @@ import {
   GET_ORDER_BY_ID_FAILURE,
   GET_SINGLE_ROLE_FAILURE,
   GET_SINGLE_ROLE_REQUEST,
-  GET_SINGLE_ROLE_SUCCESS
+  GET_SINGLE_ROLE_SUCCESS,
+  GET_ALL_PRODUCT_COUPCON_FAILURE,
+  GET_ALL_PRODUCT_COUPCON_REQUEST,
+  GET_ALL_PRODUCT_COUPCON_SUCCESS
 } from "./ActionType";
 
 const initialState = {
@@ -90,6 +93,7 @@ const initialState = {
 };
 export const adminReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_ALL_PRODUCT_COUPCON_REQUEST:
     case GET_SINGLE_ROLE_REQUEST:
     case RESET_PASSWORD_REQUEST:
     case CHANGE_ACCOUNT_STATUS_REQUEST:
@@ -134,6 +138,7 @@ export const adminReducer = (state = initialState, action) => {
         products: action.payload,
       };
     case GET_ALL_COUPCON_SUCCESS:
+    case GET_ALL_PRODUCT_COUPCON_SUCCESS:
       return {
         ...state,
         isLoading: false,
@@ -224,6 +229,7 @@ export const adminReducer = (state = initialState, action) => {
         error: null,
         allUser: action.payload,
       };
+    case GET_ALL_PRODUCT_COUPCON_FAILURE:
     case GET_SINGLE_ROLE_FAILURE:
     case RESET_PASSWORD_FAILURE:
     case CHANGE_ACCOUNT_STATUS_FAILURE:

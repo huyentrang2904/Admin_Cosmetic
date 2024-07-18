@@ -89,7 +89,10 @@ import {
   CREATE_ROLE_REQUEST,
   GET_SINGLE_ROLE_FAILURE,
   GET_SINGLE_ROLE_REQUEST,
-  GET_SINGLE_ROLE_SUCCESS
+  GET_SINGLE_ROLE_SUCCESS,
+  GET_ALL_PRODUCT_COUPCON_FAILURE,
+  GET_ALL_PRODUCT_COUPCON_REQUEST,
+  GET_ALL_PRODUCT_COUPCON_SUCCESS
 } from "./ActionType";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -314,6 +317,16 @@ export const getAllCoupcon = () => async (dispatch) => {
   }
 };
 
+export const getAllProductCoupcon = () => async (dispatch) => {
+  dispatch({ type: GET_ALL_PRODUCT_COUPCON_REQUEST });
+  try {
+    const { data } = await axios.get(`${API_BASE_URL}admin/discount/get-all-for-product`);
+    dispatch({ type: GET_ALL_PRODUCT_COUPCON_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: GET_ALL_PRODUCT_COUPCON_FAILURE, payload: error.message });
+  }
+};
+
 export const deleteCoupcon = (id) => async (dispatch) => {
   dispatch({ type: DELETE_COUPCON_REQUEST });
   try {
@@ -394,8 +407,8 @@ export const addNewProduct = (req) => async (dispatch) => {
     formData.append("capacity", req.capacity); // Corrected to match backend field name
     formData.append("quantity", req.quantity); // Corrected to match backend field name
     formData.append("brandId", req.brandId); // Corrected to match backend field name (case sensitive)
-    formData.append("category_id", req.category_id); // Corrected to match backend field name (case sensitive)
-    formData.append("discount_id", req.discount_id); // Corrected to match backend field name (case sensitive)
+    formData.append("categoryId", req.categoryId); // Corrected to match backend field name (case sensitive)
+    formData.append("discountId", req.discountId); // Corrected to match backend field name (case sensitive)
     formData.append("productStatus", req.productStatus); // Corrected to match backend field name (case sensitive)
 
     req.multipartFiles.forEach((file, index) => {

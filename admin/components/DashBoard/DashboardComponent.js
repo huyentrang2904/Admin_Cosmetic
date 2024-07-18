@@ -9,7 +9,7 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, ArcEle
 const DashboardComponent = () => {
   const dispatch = useDispatch()
   const test = useSelector(store => store?.admin?.analytic)
-  console.log(test.userPotentialDTOS)
+  console.log(test)
   useEffect(() => {
     dispatch(getDataAnalytic());
   }, []);
@@ -42,23 +42,23 @@ const DashboardComponent = () => {
         <div className='grid grid-cols-5 col-span-4 gap-4'>
           <div className="col-span-1 p-4 border border-gray-200 rounded">
             <h2 className="text-xl text-center">Total orders</h2>
-            <div className="text-xl font-semibold text-center">{test.statisticalDTO.totalOrders}</div>
+            <div className="text-xl font-semibold text-center">{test?.statisticalDTO.totalOrders}</div>
           </div>
           <div className="col-span-1 p-4 border border-gray-200 rounded">
             <h2 className="text-xl text-center">Canceled</h2>
-            <div className="text-xl font-semibold text-center">{test.statisticalDTO.canceledOrders}</div>
+            <div className="text-xl font-semibold text-center">{test?.statisticalDTO.canceledOrders}</div>
           </div>
           <div className="col-span-1 p-4 border border-gray-200 rounded">
             <h2 className="text-xl text-center">Order successful</h2>
-            <div className="text-xl font-semibold text-center">{test.statisticalDTO.orderSuccessful}</div>
+            <div className="text-xl font-semibold text-center">{test?.statisticalDTO.orderSuccessful}</div>
           </div>
           <div className="col-span-1 p-4 border border-gray-200 rounded">
             <h2 className="text-xl text-center">Pending Orders</h2>
-            <div className="text-xl font-semibold text-center">{test.statisticalDTO.pendingOrders}</div>
+            <div className="text-xl font-semibold text-center">{test?.statisticalDTO.pendingOrders}</div>
           </div>
           <div className="col-span-1 p-4 border border-gray-200 rounded">
             <h2 className="text-xl text-center">Total revenue of July</h2>
-            <div className="text-xl font-semibold text-center">{test.statisticalDTO.totalRevenueOfJuly}</div>
+            <div className="text-xl font-semibold text-center">{test?.statisticalDTO.totalRevenueOfJuly}</div>
           </div>
         </div>
 
@@ -108,13 +108,13 @@ const DashboardComponent = () => {
               </tr>
             </thead>
             <tbody>
-              {test.userPotentialDTOS.map((data, index) => {
+              {test?.userPotentialDTOS.map((data, index) => (
                 <tr key={index}>
                   <td className="p-2 border">{data.username}</td>
-                  <td className="p-2 border">10</td>
-                  <td className="p-2 border">$10000</td>
+                  <td className="p-2 border">{data.totalOrders}</td>
+                  <td className="p-2 border">{data.totalSpend}$</td>
                 </tr>
-              })}
+              ))}
               {/* Add rows here */}
             </tbody>
           </table>
