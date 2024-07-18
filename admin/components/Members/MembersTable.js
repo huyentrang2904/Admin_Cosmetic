@@ -92,7 +92,7 @@ export default function MembersTable() {
                           >Change</button>
                           <button
                             onClick={() => {
-                              setOpenUpdate(true);
+                              setOpenChange(true);
                               setId(data.id);
                             }}
                             className="px-2 py-1 mr-4 text-sm border-2 rounded-full border-dark-purple hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
@@ -122,10 +122,10 @@ export default function MembersTable() {
           <BasicModal open={openUpdate} onClose={() => setOpenUpdate(false)}>
             <UpdateRole open={openUpdate} onClose={() => setOpenUpdate(false)} data={id} />
           </BasicModal>
-          <BasicModal open={openUpdate} onClose={() => setOpenUpdate(false)}>
+          <BasicModal open={openChange} onClose={() => setOpenChange(false)}>
             <ChangeMemberPassword
-              open={openUpdate}
-              onClose={() => setOpenUpdate(false)}
+              open={openChange}
+              onClose={() => setOpenChange(false)}
               data={id}
             />
           </BasicModal>
