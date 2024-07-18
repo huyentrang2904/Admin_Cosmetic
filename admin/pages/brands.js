@@ -4,7 +4,7 @@ import BaseTemplate from '@/components/BaseTemplate'
 import BasicModal from '@/components/Modal/BasicModal'
 import AddBrand from '@/components/Brands/AddBrand'
 
-export default function brands() {
+export default function Brands() {
     const [openAdd, setOpenAdd] = useState(false)
     return (
         <BaseTemplate>

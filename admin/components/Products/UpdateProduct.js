@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBrand, getAllCategory, getProducts, getSingleProduct } from '@/state/Products/Action';
-import { addNewProduct } from '@/state/Admin/Action';
+import { addNewProduct, getAllProductCoupcon } from '@/state/Admin/Action';
 import { useDropzone } from 'react-dropzone';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useForm } from 'react-hook-form';
+import { If } from 'react-haiku';
 
 export default function UpdateProduct(props) {
     const dispatch = useDispatch();
@@ -24,11 +25,13 @@ export default function UpdateProduct(props) {
             quantity: productT?.displayProductDTO.quantity,
             capacity: productT?.displayProductDTO.capacity,
             brandId: productT?.displayProductDTO.brandId,
-            category_id: productT?.displayProductDTO.categoryId
+            categoryId: productT?.displayProductDTO.categoryId,
+            
         }
     });
     const brands = useSelector((state) => state.product?.brand || []);
     const categories = useSelector((state) => state.product?.category || []);
+    const coupcons = useSelector(state => state.admin?.coupcons || [])
 
     const imgArr = productT?.productImages
     const [fileInputs, setFileInputs] = useState(imgArr);
@@ -60,6 +63,7 @@ export default function UpdateProduct(props) {
         dispatch(getAllBrand());
         dispatch(getAllCategory());
         dispatch(getSingleProduct(props.data))
+        dispatch(getAllProductCoupcon());
     }, [dispatch]);
 
     const onSubmit = async (formData) => {
@@ -150,27 +154,27 @@ export default function UpdateProduct(props) {
                                 <label className="block text-sm font-medium text-gray-700">Brand</label>
                                 <select
                                     {...register('brandId', { required: true })}
-                                    id="brandID"
+                                    id="brandId"
                                     className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
                                 >
                                     {brands.map(brand => (
                                         <option key={brand.id} value={brand.id}>{brand.name}</option>
                                     ))}
                                 </select>
-                                {errors.brandID && <span className="text-red-500">Please select a brand</span>}
+                                {errors.brandId && <span className="text-red-500">Please select a brand</span>}
                             </div>
                             <div className="w-1/2 mb-4 ml-4">
                                 <label className="block text-sm font-medium text-gray-700">Category</label>
                                 <select
-                                    {...register('category_id', { required: true })}
-                                    id="categoryID"
+                                    {...register('categoryId', { required: true })}
+                                    id="categoryId"
                                     className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
                                 >
                                     {categories.map(category => (
                                         <option key={category.id} value={category.id}>{category.categoryName}</option>
                                     ))}
                                 </select>
-                                {errors.categoryID && <span className="text-red-500">Please select a category</span>}
+                                {errors.categoryId && <span className="text-red-500">Please select a category</span>}
                             </div>
                         </div>
                         <div className='flex'>
@@ -190,15 +194,19 @@ export default function UpdateProduct(props) {
                             </div>
                             <div className="w-1/2 mb-4 ml-4">
                                 <label className="block text-sm font-medium text-gray-700">Discount</label>
-                                {/* <select
-                                    {...register('discount_id', { required: true })}
-                                    id="discount_id"
+                                <select
+                                    {...register('discountId', { required: true })}
+                                    id="discountId"
                                     className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
                                 >
-                                    {categories.map(category => (
-                                        <option key={category.id} value={category.id}>{category.categoryName}</option>
+                                    <option value=''></option>
+                                    {coupcons?.map((coupcon, index) => (
+                                        <If isTrue={coupcon.discountStatus === 'Active'} key={index}>
+                                            <option key={coupcon.id} value={coupcon.id}>{coupcon.discountPercent}</option>
+                                        </If>
+
                                     ))}
-                                </select> */}
+                                </select>
                             </div>
                         </div>
                         <div className="mb-4">

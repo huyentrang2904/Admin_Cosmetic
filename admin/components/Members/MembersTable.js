@@ -62,10 +62,10 @@ export default function MembersTable() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 ">
               {memberList?.map((data, index) => (
-                <If isTrue={data.roleName !== "USER"}>
+                <If isTrue={data.roleName !== "USER"} key={index} >
 
                   <>
-                    <tr key={index} className="">
+                    <tr className="">
                       <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                         {index + 1}
                       </td>

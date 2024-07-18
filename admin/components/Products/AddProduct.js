@@ -179,8 +179,8 @@ export default function AddProduct(props) {
                                     className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
                                 >
                                     <option value=''></option>
-                                    {coupcons?.map(coupcon => (
-                                        <If isTrue={coupcon.discountStatus === 'Active'}>
+                                    {coupcons?.map((coupcon, index) => (
+                                        <If isTrue={coupcon.discountStatus === 'Active'} key={index}>
                                             <option key={coupcon.id} value={coupcon.id}>{coupcon.discountPercent}</option>
                                         </If>
 

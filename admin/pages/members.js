@@ -4,7 +4,7 @@ import BaseTemplate from '@/components/BaseTemplate'
 import BasicModal from '@/components/Modal/BasicModal'
 import AddMember from '@/components/Members/AddMember'
 
-export default function members() {
+export default function Members() {
     const [openAdd, setOpenAdd] = useState(false)
     return (
         <BaseTemplate>

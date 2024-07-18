@@ -5,7 +5,7 @@ import BasicModal from '@/components/Modal/BasicModal'
 import AddRole from '@/components/Roles/AddRole'
 import { Add } from '@mui/icons-material'
 
-export default function categories() {
+export default function Roles() {
     const [openAdd, setOpenAdd] = useState(false)
     return (
         <BaseTemplate>

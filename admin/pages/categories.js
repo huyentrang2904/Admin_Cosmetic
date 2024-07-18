@@ -4,7 +4,7 @@ import BaseTemplate from '@/components/BaseTemplate'
 import BasicModal from '@/components/Modal/BasicModal'
 import AddCategory from '@/components/Categories/AddCategory'
 
-export default function categories() {
+export default function Categories() {
     const [openAdd, setOpenAdd] = useState(false)
     return (
         <BaseTemplate>

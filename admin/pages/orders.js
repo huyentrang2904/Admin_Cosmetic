@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import BaseTemplate from '@/components/BaseTemplate'
 import OrdersTable from '@/components/Orders/OrdersTable'
 
-export default function brands() {
-    const [openAdd, setOpenAdd] = useState(false)
+export default function Orders() {
     return (
         <BaseTemplate>
             <div className="h-full py-4 bg-white">

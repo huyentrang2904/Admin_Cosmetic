@@ -4,7 +4,7 @@ import BaseTemplate from '@/components/BaseTemplate'
 import BasicModal from '@/components/Modal/BasicModal'
 import AddCoupcon from '@/components/Coupcons/AddCoupcon'
 
-export default function coupcons() {
+export default function Coupcons() {
     const [openAdd, setOpenAdd] = useState(false)
     return (
         <BaseTemplate>
