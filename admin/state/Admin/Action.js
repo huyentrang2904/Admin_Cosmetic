@@ -105,6 +105,7 @@ export const addNewBrand = (req) => async (dispatch) => {
     toast.success("More successful a brand!");
   } catch (e) {
     dispatch({ type: ADD_BRAND_FAILURE, payload: e });
+    toast.error(e?.response.data)
   }
 };
 
@@ -117,6 +118,7 @@ export const updateBrand = (req) => async (dispatch) => {
   } catch (e) {
     dispatch({ type: UPDATE_BRAND_FAILURE, payload: e.message });
     console.log(e)
+    toast.error(e?.response.data)
   }
 };
 
@@ -129,8 +131,7 @@ export const deleteBrand = (brandId) => async (dispatch) => {
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: DELETE_BRAND_FAILURE, payload: e.message });
-    toast.error(e?.response?.data.message);
-    console.log(e)
+    toast.error(e?.response.data);
   }
 };
 
@@ -145,6 +146,7 @@ export const addNewCategory = (req) => async (dispatch) => {
   } catch (e) {
     dispatch({ type: ADD_CATEGORY_FAILURE, payload: e.message });
     console.log(e)
+    toast(e?.response.data)
   }
 };
 
@@ -159,7 +161,7 @@ export const updateCategory = (req) => async (dispatch) => {
   } catch (e) {
     dispatch({ type: UPDATE_CATEGORY_FAILURE, payload: e });
     console.log(e)
-    toast.error(e);
+    toast.error(e?.response.data);
   }
 };
 
@@ -172,6 +174,7 @@ export const deleteCategory = (categoryId) => async (dispatch) => {
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: DELETE_CATEGORY_FAILURE, payload: e.message });
+    toast.error(e?.response.data)
   }
 };
 
@@ -206,6 +209,7 @@ export const updateOrderStatus = (req) => async (dispatch) => {
   } catch (e) {
     dispatch({ type: UPDATE_ORDER_STATUS_FAILURE, payload: e.message });
     console.log(e);
+    toast.error(e?.response.data)
   }
 };
 
@@ -303,7 +307,7 @@ export const addNewCoupcon = (req) => async (dispatch) => {
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: CREATE_NEW_COUPCON_FAILURE, payload: e.message });
-    console.log(e)
+    toast.error(e?.response.data)
   }
 };
 
@@ -365,7 +369,7 @@ export const createSubAdmin = (req) => async (dispatch) => {
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: CREATE_SUB_ADMIN_ACCOUNT_FAILURE, payload: e.message });
-    console.log(e)
+    toast.error(e?.response.data)
   }
 };
 
@@ -378,6 +382,7 @@ export const deleteAccount = (id) => async (dispatch) => {
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: REMOVE_ACCOUNT_FAILURE, payload: e.message });
+    toast.error(e?.response.data)
   }
 };
 
@@ -390,7 +395,7 @@ export const updateRoleAccount = (req) => async (dispatch) => {
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: EDIT_ACCOUNT_FAILURE, payload: e });
-    console.log(e);
+    toast.error(e?.response.data);
   }
 };
 

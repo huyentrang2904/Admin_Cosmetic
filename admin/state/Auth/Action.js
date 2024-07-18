@@ -29,7 +29,7 @@ export const login = (userData) => async (dispatch) => {
     window.location = "/dashboard";
   } catch (error) {
     dispatch({ type: LOGIN_FAILURE, payload: error });
-    toast.error(e.response.data);
+    toast.error(error?.response.data);
   }
 };
 
@@ -43,6 +43,6 @@ export const changePassword = (req) => async (dispatch) => {
   } catch (error) {
     dispatch({ type: CHANGE_PASSWORD_FAILURE, payload: error });
     console.log(error.response)
-    toast.error(error?.response?.data.message);
+    toast.error(error?.response.data);
   }
 }
