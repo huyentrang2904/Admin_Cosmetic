@@ -7,22 +7,22 @@ import { ChartPieIcon, BanknotesIcon, ReceiptPercentIcon, UsersIcon, ShoppingCar
 import { toast } from "react-toastify";
 
 const adminNavigation = [
-  { name: "Trang chủ", href: "/dashboard", icon: ChartPieIcon, current: false },
+  { name: "Dashboard", href: "/dashboard", icon: ChartPieIcon, current: false },
   {
-    name: "Quản lý sản phẩm", href: "", icon: BanknotesIcon, current: false, children: [
-      { name: 'Danh sách sản phẩm', href: '/products', current: false },
-      { name: 'Danh sách nhãn hàng', href: '/brands', current: false },
-      { name: 'Danh sách danh mục', href: '/categories', current: false },
+    name: "Product Management", href: "", icon: BanknotesIcon, current: false, children: [
+      { name: 'Product List', href: '/products', current: false },
+      { name: 'Brand List', href: '/brands', current: false },
+      { name: 'Category List', href: '/categories', current: false },
     ],
   },
   {
-    name: "Quản lý phân quyền", href: "", icon: UsersIcon, current: false, children: [
-      { name: 'Quản lý quyền', href: '/roles', current: false },
-      { name: 'Quản lý thành viên', href: '/members', current: false },
+    name: "Role Management", href: "", icon: UsersIcon, current: false, children: [
+      { name: 'Role & Permission Management', href: '/roles', current: false },
+      { name: 'Member Management', href: '/members', current: false },
     ],
   },
-  { name: "Quản lý mã giảm giá", href: "/coupcons", icon: ReceiptPercentIcon, current: false },
-  { name: "Quản lý đơn hàng", href: "/orders", icon: ShoppingCartIcon, current: false },
+  { name: "Discount Management", href: "/coupcons", icon: ReceiptPercentIcon, current: false },
+  { name: "Order Management", href: "/orders", icon: ShoppingCartIcon, current: false },
 
 ];
 

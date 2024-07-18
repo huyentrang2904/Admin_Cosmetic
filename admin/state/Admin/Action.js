@@ -99,7 +99,7 @@ export const addNewBrand = (req) => async (dispatch) => {
   try {
     const { data } = await axios.post(`${API_BASE_URL}admin/brand/create`, req);
     dispatch({ type: ADD_BRAND_SUCCESS, payload: data });
-    toast.success("Thêm nhãn hàng thành công");
+    toast.success("More successful a brand!");
   } catch (e) {
     dispatch({ type: ADD_BRAND_FAILURE, payload: e });
   }
@@ -110,7 +110,7 @@ export const updateBrand = (req) => async (dispatch) => {
   try {
     const { data } = await axios.put(`${API_BASE_URL}admin/brand/update`, req);
     dispatch({ type: UPDATE_BRAND_SUCCESS, payload: data });
-    toast.success("Sửa thành công");
+    toast.success("Update successful");
   } catch (e) {
     dispatch({ type: UPDATE_BRAND_FAILURE, payload: e.message });
     console.log(e)

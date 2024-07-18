@@ -36,7 +36,7 @@ export default function BrandsTable() {
                   scope="col"
                   className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                 >
-                  Tên nhãn hàng
+                  Brand's Name
                 </th>
                 <th className="w-1/12"></th>
               </tr>
@@ -59,14 +59,14 @@ export default function BrandsTable() {
                           setInitB(data);
                         }}
                         className="mr-4 py-1 px-2 border-2 border-dark-purple rounded-full text-sm hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
-                      >Xem</button>
+                      >View</button>
                       <button
                         onClick={() => {
                           setOpenUpdate(true);
                           setInitB(data);
                         }}
                         className="py-1 px-2 mr-4 border-2 border-dark-purple rounded-full text-sm hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
-                      >Sửa</button>
+                      >Update</button>
 
                       <button
                         onClick={() => {
@@ -74,7 +74,7 @@ export default function BrandsTable() {
                           setId(data.id);
                         }}
                         className=" hover:bg-red-400 border-red-400 border-2 px-2 py-1 rounded-full hover:text-white text-red-400 "
-                      >Xóa</button>
+                      >Delete</button>
                     </td>
 
                   </tr>

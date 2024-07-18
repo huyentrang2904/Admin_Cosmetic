@@ -29,7 +29,7 @@ export default function CoupconsTable() {
               <tr className="">
                 <th
                   scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-base font-semibold text-gray-900 sm:pl-6 w-2/12"
+                  className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                 >
                   No.
                 </th>
@@ -43,7 +43,19 @@ export default function CoupconsTable() {
                   scope="col"
                   className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                 >
-                  Discount percent
+                Discount percent
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-base font-semibold text-gray-600"
+                >
+                Apply to
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                >
+                Min amount
                 </th>
                 <th
                   scope="col"
@@ -64,7 +76,7 @@ export default function CoupconsTable() {
               {brands?.map((data, index) => (
                 <>
                   <tr key={index} className="">
-                    <td className="py-4 pr-10 text-base font-medium text-left text-gray-900 whitespace-nowrap sm:pl-6 ">
+                    <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap ">
                       {index + 1}
                     </td>
                     <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
@@ -72,6 +84,12 @@ export default function CoupconsTable() {
                     </td>
                     <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                       {data.discountPercent}%
+                    </td>
+                    <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
+                      {data.applyTo}
+                    </td>
+                    <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
+                      {data.minAmount}
                     </td>
                     <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                       {data.maxUsage}
