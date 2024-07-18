@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBrand, getAllCategory, getProducts } from '@/state/Products/Action';
-import { addNewProduct } from '@/state/Admin/Action';
+import { addNewProduct, getAllProductCoupcon } from '@/state/Admin/Action';
 import { useDropzone } from 'react-dropzone';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useForm } from 'react-hook-form';
+import { If } from 'react-haiku';
 
 export default function AddProduct(props) {
     const dispatch = useDispatch();
@@ -15,6 +16,7 @@ export default function AddProduct(props) {
     } = useForm();
     const brands = useSelector((state) => state.product?.brand || []);
     const categories = useSelector((state) => state.product?.category || []);
+    const coupcons = useSelector(state => state.admin?.coupcons || [])
     const [fileInputs, setFileInputs] = useState([]);
     const [data, setData] = useState({ multipartFiles: [] });
 
@@ -41,6 +43,7 @@ export default function AddProduct(props) {
     useEffect(() => {
         dispatch(getAllBrand());
         dispatch(getAllCategory());
+        dispatch(getAllProductCoupcon());
     }, [dispatch]);
 
     const onSubmit = async (formData) => {
@@ -58,7 +61,7 @@ export default function AddProduct(props) {
     if (props.open) {
         return (
             <div id="root">
-                <div className="absolute w-2/5 px-10 py-5 mt-4 overflow-auto -translate-x-1/2 -translate-y-1/2 bg-white min-w-fit top-1/2 left-1/2 rounded-xl">
+                <div className="absolute max-h-[80vh] w-3/5 px-10 py-5 mt-4 overflow-auto -translate-x-1/2 -translate-y-1/2 bg-white min-w-fit top-1/2 left-1/2 rounded-xl">
                     <h3 className="mb-4 text-xl font-semibold tracking-wide">
                         Add new product
                     </h3>
@@ -142,8 +145,8 @@ export default function AddProduct(props) {
                             <div className="w-1/2 mb-4 ml-4">
                                 <label className="block text-sm font-medium text-gray-700">Category</label>
                                 <select
-                                    {...register('category_id', { required: true })}
-                                    id="categoryID"
+                                    {...register('categoryId', { required: true })}
+                                    id="categoryId"
                                     className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
                                 >
                                     {categories.map(category => (
@@ -170,15 +173,19 @@ export default function AddProduct(props) {
                             </div>
                             <div className="w-1/2 mb-4 ml-4">
                                 <label className="block text-sm font-medium text-gray-700">Discount</label>
-                                {/* <select
-                                    {...register('discount_id', { required: true })}
-                                    id="discount_id"
+                                <select
+                                    {...register('discountId', { required: true })}
+                                    id="discountId"
                                     className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
                                 >
-                                    {categories.map(category => (
-                                        <option key={category.id} value={category.id}>{category.categoryName}</option>
+                                    <option value=''></option>
+                                    {coupcons?.map(coupcon => (
+                                        <If isTrue={coupcon.discountStatus === 'Active'}>
+                                            <option key={coupcon.id} value={coupcon.id}>{coupcon.discountPercent}</option>
+                                        </If>
+
                                     ))}
-                                </select> */}
+                                </select>
                             </div>
                         </div>
                         <div className="mb-4">
