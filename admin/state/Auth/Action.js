@@ -40,7 +40,7 @@ export const login = (userData) => async (dispatch) => {
     localStorage.setItem('userInformation', JSON.stringify(user))
     localStorage.setItem('userToken', JSON.stringify(user.accessToken))
     if (user) {
-      dispatch(getSingleRole())
+      await dispatch(getSingleRole(user.user.roleId))
     }
     toast.success("Login successfully!");
     dispatch({ type: LOGIN_SUCCESS, payload: user });

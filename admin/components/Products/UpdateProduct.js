@@ -7,20 +7,33 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useForm } from 'react-hook-form';
 
 export default function UpdateProduct(props) {
-    console.log(props)
     const dispatch = useDispatch();
+    const productT = useSelector((state) => state.product?.product)
+    console.log(productT)
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        defaultValues: {
+            title: productT?.displayProductDTO.title,
+            description: productT?.displayProductDTO.description,
+            currentCost: productT?.displayProductDTO.currentCost,
+            productStatus: productT?.displayProductDTO.productStatus,
+            madeIn: productT?.displayProductDTO.madeIn,
+            quantity: productT?.displayProductDTO.quantity,
+            capacity: productT?.displayProductDTO.capacity,
+            brandId: productT?.displayProductDTO.brandId,
+            category_id: productT?.displayProductDTO.categoryId
+        }
+    });
     const brands = useSelector((state) => state.product?.brand || []);
     const categories = useSelector((state) => state.product?.category || []);
-    const imgArr = useSelector((state) => state.product?.product?.productImages)
-    const [fileInputs, setFileInputs] = useState([]);
-    const [data, setData] = useState({ 
-        ...imgArr,
-        multipartFiles: [] 
+
+    const imgArr = productT?.productImages
+    const [fileInputs, setFileInputs] = useState(imgArr);
+    const [data, setData] = useState({
+        multipartFiles: imgArr || [],
     });
 
     const handleDrop = (acceptedFiles) => {
@@ -51,20 +64,21 @@ export default function UpdateProduct(props) {
 
     const onSubmit = async (formData) => {
         formData.discount_id = ''
-        const submitData = {
-            ...formData,
-            multipartFiles: fileInputs,
-        };
-        await dispatch(addNewProduct(submitData)).then((value) => {
-            props.onClose();
-            dispatch(getProducts())
-        });
+        console.log(data)
+        // const submitData = {
+        //     ...formData,
+        //     multipartFiles: fileInputs,
+        // };
+        // await dispatch(addNewProduct(submitData)).then((value) => {
+        //     props.onClose();
+        //     dispatch(getProducts())
+        // });
     };
 
-    if (props.open) {
+    if (props.open && productT) {
         return (
             <div id="root">
-                <div className="absolute w-2/5 px-10 py-5 mt-4 overflow-auto -translate-x-1/2 -translate-y-1/2 bg-white min-w-fit top-1/2 left-1/2 rounded-xl">
+                <div className="absolute w-3/5 px-10 py-5 mt-4 overflow-auto max-h-[85vh] -translate-x-1/2 -translate-y-1/2 bg-white min-w-fit top-1/2 left-1/2 rounded-xl">
                     <h3 className="mb-4 text-xl font-semibold tracking-wide">
                         Update product
                     </h3>
@@ -195,9 +209,9 @@ export default function UpdateProduct(props) {
                                     <p className=''>Drag 'n' drop some files here, or click to select files</p>
                                 </div>
                                 <div className="flex mt-2">
-                                    {fileInputs.map((file, index) => (
+                                    {fileInputs?.map((file, index) => (
                                         <div key={index} className="relative mr-2">
-                                            <img src={file.preview} alt={file.name} className="object-cover w-20 h-20 rounded-lg" />
+                                            <img src={file.preview || file} alt={file.name} className="object-cover w-20 h-20 rounded-lg" />
                                             <button
                                                 type="button"
                                                 onClick={() => handleRemoveFile(file)}

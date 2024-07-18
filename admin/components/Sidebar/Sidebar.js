@@ -9,20 +9,20 @@ import { toast } from "react-toastify";
 const adminNavigation = [
   { name: "Trang chủ", href: "/dashboard", icon: ChartPieIcon, current: false },
   {
-    name: "Quản lý sản phẩm", href: "", icon: BanknotesIcon, current: false, children: [
+    name: "Quản lý sản phẩm", href: "", requiredPermissions: "Manage products", icon: BanknotesIcon, current: false, children: [
       { name: 'Danh sách sản phẩm', href: '/products', current: false },
       { name: 'Danh sách nhãn hàng', href: '/brands', current: false },
       { name: 'Danh sách danh mục', href: '/categories', current: false },
     ],
   },
   {
-    name: "Quản lý phân quyền", href: "", icon: UsersIcon, current: false, children: [
+    name: "Quản lý phân quyền", href: "", requiredPermissions: "Manage permissions", icon: UsersIcon, current: false, children: [
       { name: 'Quản lý quyền', href: '/roles', current: false },
       { name: 'Quản lý thành viên', href: '/members', current: false },
     ],
   },
-  { name: "Quản lý mã giảm giá", href: "/coupcons", icon: ReceiptPercentIcon, current: false },
-  { name: "Quản lý đơn hàng", href: "/orders", icon: ShoppingCartIcon, current: false },
+  { name: "Quản lý mã giảm giá", href: "/coupcons", requiredPermissions: "Manage discounts", icon: ReceiptPercentIcon, current: false },
+  { name: "Quản lý đơn hàng", href: "/orders", requiredPermissions: "Manage orders", icon: ShoppingCartIcon, current: false },
 
 ];
 
