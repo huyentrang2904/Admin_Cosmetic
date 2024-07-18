@@ -204,7 +204,7 @@ export default function ViewProduct(props) {
                                 <div className="flex mt-2">
                                     {fileInputs?.map((file, index) => (
                                         <div key={index} className="relative mr-2">
-                                            <img src={file.preview || file} alt={file.name} className="object-cover w-20 h-20 rounded-lg" />
+                                            <img src={file.imageUrl} alt={file.name} className="object-cover w-20 h-20 rounded-lg" />
                                         </div>
                                     ))}
                                 </div>
