@@ -3,6 +3,7 @@ import { getProducts } from "@/state/Products/Action";
 import { useState, useEffect } from "react";
 import BasicModal from "../Modal/BasicModal";
 import UpdateProduct from "./UpdateProduct";
+import ViewProduct from "./ViewProduct";
 // import DeleteCategory from "./DeleteCategory";
 // import UpdateCategory from "./UpdateCategory";
 
@@ -83,13 +84,13 @@ export default function ProductsTable() {
                         className="px-2 py-1 mr-4 text-sm border-2 rounded-full border-dark-purple hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
                       >Update</button>
 
-                      {/* <button
+                      <button
                         onClick={() => {
                           setOpenDelete(true);
                           setId(data.id);
                         }}
-                        className="px-2 py-1 text-red-400 border-2 border-red-400 rounded-full hover:bg-red-400 hover:text-white"
-                      >Delete</button> */}
+                        className="px-2 py-1 mr-4 text-sm border-2 rounded-full border-dark-purple hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
+                      >View</button>
                     </td>
 
                   </tr>
@@ -97,9 +98,9 @@ export default function ProductsTable() {
               ))}
             </tbody>
           </table>
-          {/* <BasicModal open={openDelete} onClose={() => setOpenDelete(false)}>
-            <DeleteCategory onClose={() => setOpenDelete(false)} data={id} />
-          </BasicModal> */}
+          <BasicModal open={openDelete} onClose={() => setOpenDelete(false)}>
+            <ViewProduct open={openDelete} onClose={() => setOpenDelete(false)} data={id} />
+          </BasicModal>
           <BasicModal open={openUpdate} onClose={() => setOpenUpdate(false)}>
             <UpdateProduct
               open={openUpdate}

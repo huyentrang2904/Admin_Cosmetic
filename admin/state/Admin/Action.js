@@ -458,38 +458,37 @@ export const getAllProduct = (req) => async (dispatch) => {
 };
 
 
-export const updateProduct = (productId, req) => async (dispatch) => {
+export const updateProduct = (req) => async (dispatch) => {
   dispatch({ type: UPDATE_PRODUCT_REQUEST });
   try {
     const formData = new FormData();
+    formData.append("id", req.id);
     formData.append("title", req.title);
     formData.append("description", req.description);
-    formData.append("discountPercent", req.discountPercent);
-    formData.append("brandId", req.brandId);
-    formData.append("categoryId", req.categoryId);
+    formData.append("currentCost", req.currentCost); // Corrected to match backend field name
+    formData.append("madeIn", req.madeIn); // Corrected to match backend field name
+    formData.append("capacity", req.capacity); // Corrected to match backend field name
+    formData.append("quantity", req.quantity); // Corrected to match backend field name
+    formData.append("brandId", req.brandId); // Corrected to match backend field name (case sensitive)
+    formData.append("categoryId", req.categoryId); // Corrected to match backend field name (case sensitive)
+    formData.append("discountId", req.discountId); // Corrected to match backend field name (case sensitive)
+    formData.append("productStatus", req.productStatus); // Corrected to match backend field name (case sensitive)
+    formData.append("imageIdDelete", req.imageIdDelete); // Corrected to match backend field name (case sensitive)
 
     if (req.multipartFiles) {
       req.multipartFiles.forEach((file, index) => {
         formData.append("multipartFiles", file, file.name);
       });
     }
-
-    formData.append("optionRequestDtoList", JSON.stringify(req.optionRequestDtoList));
-    formData.append("variantsRequestDtoList", JSON.stringify(req.variantsRequestDtoList));
-    formData.append("imageIdDelete", req.imageIdDelete);
-
-    const { data } = await apiFormData.put(`admin/product/update/${productId}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+      
+    const { data } = await apiFormData.put(`admin/product/update`, formData);
 
     dispatch({ type: UPDATE_PRODUCT_SUCCESS, payload: data });
-    toast.success("Sửa thành công");
+    toast.success("Update successfully");
     console.log(data);
   } catch (error) {
     dispatch({ type: UPDATE_PRODUCT_FAILURE, payload: error.message });
-    toast.error("Sửa thất bại, biến thể của sản phẩm đang tham chiếu đến một đơn hàng hoặc có người mua sản phẩm này");
+    toast.error("Failed");
     console.log(error);
   }
 }
