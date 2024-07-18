@@ -1,514 +1,263 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllBrand, getAllCategory } from '@/state/Products/Action';
-import {
-  Container,
-  TextField,
-  Button,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Box,
-  Typography,
-  IconButton
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { MuiChipsInput } from 'mui-chips-input';
+import { getAllBrand, getAllCategory, getProducts, getSingleProduct } from '@/state/Products/Action';
+import { updateProduct, getAllProductCoupcon } from '@/state/Admin/Action';
 import { useDropzone } from 'react-dropzone';
-import { getAllProduct, updateProduct } from '@/state/Admin/Action';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useForm } from 'react-hook-form';
+import { If } from 'react-haiku';
 
-const UpdateProductPage = ({ product, onClose }) => {
-  console.log("product:", product);
-  const dispatch = useDispatch();
-  const brands = useSelector((state) => state.product?.brand?.content || []);
-  const categories = useSelector((state) => state.product?.category?.content || []);
-  console.log("categories:", categories);
-  const [data, setData] = useState({
-    title: product.title,
-    description: product.description,
-    discountPercent: product.discountPercent,
-    brandId: product?.brand?.id,
-    categoryId: product?.category?.id,
-    multipartFiles: product.images || [],
-    optionRequestDtoList: product.options.map(option => ({
-      id: option.id,
-      name: option.name,
-      productOptionValues: option.optionValues.map(value => ({ id: value.id, value: value.value }))
-    })),
-    variantsRequestDtoList: product.productSkus.map(sku => ({
-      id: sku.id,
-      sku: sku.sku,
-      quantity: sku.quantity,
-      price: sku.price,
-      optionSelectRequestDtoList: sku.skuValues.map(skuValue => ({
-        nameOption: skuValue.option.name,
-        valueOption: skuValue.optionValues.value
-      }))
-    }))
-  });
-  const [fileInputs, setFileInputs] = useState(product.images || []);
-  const [imageIdDelete, setImageIdDelete] = useState([]);
-
-  useEffect(() => {
-    dispatch(getAllBrand());
-    dispatch(getAllCategory());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (brands.length > 0) {
-      setData((prevData) => ({
-        ...prevData,
-        brandId: product?.brand?.id
-      }));
-    }
-  }, [brands]);
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      setData((prevData) => ({
-        ...prevData,
-        categoryId: product?.category?.id
-      }));
-    }
-  }, [categories]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setData({ ...data, [name]: value });
-  };
-
-  const handleAttributeChange = (index, field, value) => {
-    const updatedOptions = [...data.optionRequestDtoList];
-    updatedOptions[index][field] = value;
-
-    const updatedVariants = data.variantsRequestDtoList.map(variant => {
-      const updatedVariantOptions = variant.optionSelectRequestDtoList.map((opt, optIndex) => {
-        if (optIndex === index) {
-          return { ...opt, nameOption: value };
+export default function UpdateProduct(props) {
+    const dispatch = useDispatch();
+    const productT = useSelector((state) => state.product?.product)
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            title: productT?.displayProductDTO.title,
+            description: productT?.displayProductDTO.description,
+            currentCost: productT?.displayProductDTO.currentCost,
+            productStatus: productT?.displayProductDTO.productStatus,
+            madeIn: productT?.displayProductDTO.madeIn,
+            quantity: productT?.displayProductDTO.quantity,
+            capacity: productT?.displayProductDTO.capacity,
+            brandId: productT?.displayProductDTO.brandId,
+            categoryId: productT?.displayProductDTO.categoryId,
+            discountId: productT?.displayProductDTO.discountId
         }
-        return opt;
-      });
-      return { ...variant, optionSelectRequestDtoList: updatedVariantOptions };
     });
+    const brands = useSelector((state) => state.product?.brand || []);
+    const categories = useSelector((state) => state.product?.category || []);
+    const coupcons = useSelector(state => state.admin?.coupcons || [])
 
-    setData({ ...data, optionRequestDtoList: updatedOptions, variantsRequestDtoList: updatedVariants });
-  };
-
-  // const handleChipsChange = (index, newChips) => {
-  //   console.log("newChips:", newChips);
-  //   const updatedOptions = [...data.optionRequestDtoList];
-  //   const existingValues = updatedOptions[index].productOptionValues.filter(val => val.id);
-
-
-  //   const newValues = [];
-  //   for (let i = 0; i < newChips.length; i++) {
-  //     let exists = false;
-  //     for (let j = 0; j < existingValues.length; j++) {
-  //       if (existingValues[j].value === newChips[i]) {
-  //         exists = true;
-  //         break;
-  //       }
-  //     }
-  //     if (!exists) {
-  //       console.log("New chip:", newChips[i]);
-  //       newValues.push({ value: newChips[i] });
-  //     }
-  //   }
-
-  //   updatedOptions[index].productOptionValues = [...existingValues, ...newValues];
-
-  //   setData({ ...data, optionRequestDtoList: updatedOptions });
-  // };
-
-  const handleChipsChange = (index, newChips) => {
-    console.log("newChips:", newChips);
-
-    const updatedOptions = [...data.optionRequestDtoList];
-    const existingValues = updatedOptions[index].productOptionValues.filter(val => val.id);
-
-    const newValues = [];
-    for (let i = 0; i < newChips.length; i++) {
-      let exists = false;
-      for (let j = 0; j < existingValues.length; j++) {
-        if (existingValues[j].value === newChips[i]) {
-          exists = true;
-          break;
-        }
-      }
-      if (!exists) {
-        console.log("New chip:", newChips[i]);
-        newValues.push({ value: newChips[i] });
-      }
-    }
-
-    const updatedProductOptionValues = existingValues.filter(val => newChips.includes(val.value)).concat(newValues);
-
-    updatedOptions[index].productOptionValues = updatedProductOptionValues;
-
-    setData({ ...data, optionRequestDtoList: updatedOptions });
-  };
-
-
-  const handleChipDelete = (index, chip) => {
-    const updatedOptions = [...data.optionRequestDtoList];
-    const filteredValues = updatedOptions[index].productOptionValues.filter(val => val.value !== chip);
-    updatedOptions[index].productOptionValues = filteredValues;
-    console.log("filteredValues:", filteredValues);
-
-    setData({ ...data, optionRequestDtoList: updatedOptions });
-  };
-
-  const addAttribute = () => {
-    const newAttribute = { name: '', productOptionValues: [] };
-    const updatedOptions = [...data.optionRequestDtoList, newAttribute];
-    const updatedVariants = data.variantsRequestDtoList.map(variant => ({
-      ...variant,
-      optionSelectRequestDtoList: [...variant.optionSelectRequestDtoList, { nameOption: '', valueOption: '' }]
-    }));
-
-    setData({ ...data, optionRequestDtoList: updatedOptions, variantsRequestDtoList: updatedVariants });
-  };
-
-  const removeAttribute = (index) => {
-    const updatedOptions = [...data.optionRequestDtoList];
-    updatedOptions.splice(index, 1);
-
-    const updatedVariants = data.variantsRequestDtoList.map(variant => {
-      const updatedVariantOptions = variant.optionSelectRequestDtoList.filter((_, i) => i !== index);
-      return { ...variant, optionSelectRequestDtoList: updatedVariantOptions };
+    const imgArr = productT?.productImages
+    const [fileInputs, setFileInputs] = useState(imgArr);
+    const [data, setData] = useState({
+        multipartFiles: imgArr || [],
     });
+    const [imageIdDelete, setImageIdDelete] = useState([]);
 
-    setData({ ...data, optionRequestDtoList: updatedOptions, variantsRequestDtoList: updatedVariants });
-  };
-
-  const handleVariantChange = (variantIndex, field, value) => {
-    const updatedVariants = [...data.variantsRequestDtoList];
-    updatedVariants[variantIndex][field] = value;
-    setData({ ...data, variantsRequestDtoList: updatedVariants });
-  };
-
-  const handleVariantOptionChange = (variantIndex, optionIndex, field, value) => {
-    const updatedVariants = [...data.variantsRequestDtoList];
-    updatedVariants[variantIndex].optionSelectRequestDtoList[optionIndex][field] = value;
-    setData({ ...data, variantsRequestDtoList: updatedVariants });
-  };
-
-  const addVariant = () => {
-    const newVariant = {
-      sku: 'SKU',
-      quantity: '',
-      price: '',
-      optionSelectRequestDtoList: data.optionRequestDtoList.map(opt => ({ nameOption: opt.name, valueOption: '' }))
+    const handleDrop = (acceptedFiles) => {
+        const filesWithPreview = acceptedFiles.map(file => Object.assign(file, {
+            preview: URL.createObjectURL(file)
+        }));
+        setFileInputs([...fileInputs, ...filesWithPreview]);
+        setData({ ...data, multipartFiles: [...data.multipartFiles, ...filesWithPreview] });
     };
 
-    setData({
-      ...data,
-      variantsRequestDtoList: [...data.variantsRequestDtoList, newVariant]
-    });
-  };
-
-  const removeVariant = (index) => {
-    const updatedVariants = [...data.variantsRequestDtoList];
-    updatedVariants.splice(index, 1);
-    setData({ ...data, variantsRequestDtoList: updatedVariants });
-  };
-
-  const handleDrop = (acceptedFiles) => {
-    const filesWithPreview = acceptedFiles.map(file => Object.assign(file, {
-      preview: URL.createObjectURL(file)
-    }));
-    setFileInputs([...fileInputs, ...filesWithPreview]);
-    setData({ ...data, multipartFiles: [...data.multipartFiles, ...filesWithPreview] });
-  };
-
-  const handleRemoveFile = (file) => {
-    if (file.id) {
-      setImageIdDelete(prev => [...prev, file.id]);
-    }
-    const updatedFiles = fileInputs.filter(f => f !== file);
-    const updatedMultipartFiles = data.multipartFiles.filter(f => f !== file);
-    setFileInputs(updatedFiles);
-    setData({ ...data, multipartFiles: updatedMultipartFiles });
-  };
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: handleDrop,
-    accept: 'image/*'
-  });
-
-  const handleSubmit = async () => {
-    // e.preventDefault();
-
-    const formData = {
-      title: data.title,
-      description: data.description,
-      discountPercent: data.discountPercent,
-      brandId: data.brandId,
-      categoryId: data.categoryId,
-      multipartFiles: fileInputs.filter(file => !file.id),
-      optionRequestDtoList: data.optionRequestDtoList.map(option => ({
-        id: option.id,
-        name: option.name,
-        productOptionValues: option.productOptionValues.map(value => ({
-          id: value.id,
-          value: value.value
-        }))
-      })),
-      variantsRequestDtoList: data.variantsRequestDtoList.map(variant => ({
-        id: variant.id,
-        sku: variant.sku,
-        quantity: variant.quantity,
-        price: variant.price,
-        optionSelectRequestDtoList: variant.optionSelectRequestDtoList.map(option => ({
-          nameOption: option.nameOption,
-          valueOption: option.valueOption
-        }))
-      })),
-      imageIdDelete: imageIdDelete.join(',')
+    const handleRemoveFile = (file) => {
+        if (file.id) {
+            setImageIdDelete(prev => [...prev, file.id]);
+        }
+        const updatedFiles = fileInputs.filter(f => f !== file);
+        const updatedMultipartFiles = data.multipartFiles.filter(f => f !== file);
+        setFileInputs(updatedFiles);
+        setData({ ...data, multipartFiles: updatedMultipartFiles });
     };
 
-    // Filter out options without IDs (new options)
-    formData.optionRequestDtoList.forEach(option => {
-      option.productOptionValues = option.productOptionValues.filter(value => value.id || !value.id);
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop: handleDrop,
+        accept: 'image/*'
     });
 
-    // Filter out new options without IDs
-    formData.optionRequestDtoList = formData.optionRequestDtoList.filter(option => option.id || !option.id);
+    useEffect(() => {
+        dispatch(getAllBrand());
+        dispatch(getAllCategory());
+        dispatch(getSingleProduct(props.data))
+        dispatch(getAllProductCoupcon());
+    }, [dispatch]);
 
-    console.log(formData);
-    await dispatch(updateProduct(product.id, formData));
-    await dispatch(getAllProduct());
-  };
+    const onSubmit = async (formData) => {
+        formData.id = productT?.displayProductDTO.id
+        formData.imageIdDelete = imageIdDelete.join(',')
+        console.log(imageIdDelete)
+        const submitData = {
+            ...formData,
+            multipartFiles: fileInputs,
+        };
+        console.log(submitData)
+        await dispatch(updateProduct(submitData)).then((value) => {
+            props.onClose();
+            dispatch(getProducts())
+        });
+    };
 
-  return (
-    <Container maxWidth="md">
-      <Box className='h-[90vh] overflow-y-scroll' mt={4} p={2} bgcolor="white" boxShadow={3} borderRadius={2}>
-        <Typography variant="h4" component="h2" gutterBottom>
-          Sửa sản phẩm
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Box mb={2}>
-            <TextField
-              fullWidth
-              label="Tên sản phẩm"
-              name="title"
-              value={data.title}
-              onChange={handleInputChange}
-              variant="outlined"
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="Giảm giá"
-              name="discountPercent"
-              type="number"
-              value={data.discountPercent}
-              onChange={handleInputChange}
-              variant="outlined"
-              margin="normal"
-            />
-          </Box>
-          <Box mb={2}>
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel>Danh mục</InputLabel>
-              <Select
-                name="categoryId"
-                value={data.categoryId}
-                onChange={handleInputChange}
-                label="Category"
-              >
-                {categories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel>Nhãn hàng</InputLabel>
-              <Select
-                name="brandId"
-                value={data.brandId}
-                onChange={handleInputChange}
-                label="Brand"
-              >
-                {brands.map((brand) => (
-                  <MenuItem key={brand.id} value={brand.id}>
-                    {brand.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          <TextField
-            fullWidth
-            label="Mô tả sản phẩm"
-            name="description"
-            value={data.description}
-            onChange={handleInputChange}
-            variant="outlined"
-            margin="normal"
-            multiline
-            rows={4}
-          />
+    if (props.open && productT) {
+        return (
+            <div id="root">
+                <div className="absolute w-3/5 px-10 py-5 mt-4 overflow-auto max-h-[85vh] -translate-x-1/2 -translate-y-1/2 bg-white min-w-fit top-1/2 left-1/2 rounded-xl">
+                    <h3 className="mb-4 text-xl font-semibold tracking-wide">
+                        Update product
+                    </h3>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="mb-4">
+                            <label className="block">Title</label>
+                            <input
+                                {...register('title', { required: true })}
+                                type="text"
+                                className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                            />
+                            {errors.title && <span className="text-red-500">This field is required</span>}
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea
+                                {...register('description')}
+                                rows="3"
+                                className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+                        <div className='flex'>
+                            <div className="w-1/2 mb-4 mr-4">
+                                <label htmlFor="currentCost" className="block text-sm font-medium text-gray-700">Current Cost</label>
+                                <input
+                                    {...register('currentCost', { required: true, pattern: /^[0-9]*$/ })}
+                                    type="text"
+                                    id="currentCost"
+                                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                                />
+                                {errors.currentCost && <span className="text-red-500">Please enter a valid number</span>}
+                            </div>
+                            <div className="w-1/2 mb-4 ml-4">
+                                <label htmlFor="madeIn" className="block text-sm font-medium text-gray-700">Made In</label>
+                                <input
+                                    {...register('madeIn', { required: true })}
+                                    type="text"
+                                    id="madeIn"
+                                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                                />
+                                {errors.madeIn && <span className="text-red-500">This field is required</span>}
+                            </div>
+                        </div>
+                        <div className='flex'>
+                            <div className="w-1/2 mb-4 mr-4">
+                                <label className="block text-sm font-medium text-gray-700">Capacity</label>
+                                <input
+                                    {...register('capacity', { required: true })}
+                                    type="text"
+                                    id="capacity"
+                                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                                />
+                                {errors.capacity && <span className="text-red-500">This field is required</span>}
+                            </div>
+                            <div className="w-1/2 mb-4 ml-4">
+                                <label className="block text-sm font-medium text-gray-700">Quantity</label>
+                                <input
+                                    {...register('quantity', { required: true, pattern: /^[0-9]*$/ })}
+                                    type="text"
+                                    id="quantity"
+                                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                                />
+                                {errors.quantity && <span className="text-red-500">Please enter a valid number</span>}
+                            </div>
+                        </div>
+                        <div className='flex'>
 
-          <Box mt={2} mb={2} {...getRootProps()} border="1px dashed grey" p={2} textAlign="center">
-            <input {...getInputProps()} />
-            <Typography>{`Thả ảnh vào đây hoặc bấm vào để chọn ảnh`}</Typography>
-          </Box>
-          <Box display="flex" flexWrap="wrap" gap={2}>
-            {fileInputs.map((file, index) => (
-              <Box key={index} position="relative" display="inline-block">
-                <img src={file.preview || file.imageUrl} alt="Preview" width={100} height={100} />
-                <IconButton
-                  onClick={() => handleRemoveFile(file)}
-                  color="secondary"
-                  size="small"
-                  style={{ position: 'absolute', top: 0, right: 0 }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Box>
-            ))}
-          </Box>
+                            <div className="w-1/2 mb-4 mr-4">
+                                <label className="block text-sm font-medium text-gray-700">Brand</label>
+                                <select
+                                    {...register('brandId', { required: true })}
+                                    id="brandId"
+                                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                                >
+                                    {brands.map(brand => (
+                                        <option key={brand.id} value={brand.id}>{brand.name}</option>
+                                    ))}
+                                </select>
+                                {errors.brandId && <span className="text-red-500">Please select a brand</span>}
+                            </div>
+                            <div className="w-1/2 mb-4 ml-4">
+                                <label className="block text-sm font-medium text-gray-700">Category</label>
+                                <select
+                                    {...register('categoryId', { required: true })}
+                                    id="categoryId"
+                                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                                >
+                                    {categories.map(category => (
+                                        <option key={category.id} value={category.id}>{category.categoryName}</option>
+                                    ))}
+                                </select>
+                                {errors.categoryId && <span className="text-red-500">Please select a category</span>}
+                            </div>
+                        </div>
+                        <div className='flex'>
 
-          <Box mt={4}>
-            <Typography variant="h6" component="h4">
-              Thuộc tính sản phẩm
-            </Typography>
-            {data?.optionRequestDtoList?.map((attribute, index) => (
-              <Box key={index} mb={2}>
-                <Box display="flex" alignItems="center">
-                  <TextField
-                    label={`Thuộc tính ${index + 1}`}
-                    value={attribute.name}
-                    onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                  />
-                  <IconButton
-                    onClick={() => removeAttribute(index)}
-                    color="secondary"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-                <MuiChipsInput
-                  value={attribute.productOptionValues.map(val => val.value)}
-                  onChange={(newChips) => handleChipsChange(index, newChips)}
-                  onDelete={(chip, chipIndex) => handleChipDelete(index, chip)}
-                  fullWidth
-                  variant="outlined"
-                  margin="normal"
-                  label="Giá trị của thuộc tính (Ấn Enter để thêm giá trị mới)"
-                />
-              </Box>
-            ))}
-            <Button
-              onClick={addAttribute}
-              variant="contained"
-              color="primary"
-            >
-              Thêm thuộc tính
-            </Button>
-          </Box>
+                            <div className="w-1/2 mb-4 mr-4">
+                                <label className="block text-sm font-medium text-gray-700">Status</label>
+                                <select
+                                    {...register('productStatus')}
+                                    id="productStatus"
+                                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                                >
+                                    <option value='Còn hàng'>Stocking</option>
+                                    <option value='Hết hàng'>Out of stock</option>
+                                    <option value='Ẩn'>Hide</option>
 
-          <Box mt={4}>
-            <Typography variant="h6" component="h4">
-              Chi tiết
-            </Typography>
-            {data?.variantsRequestDtoList?.map((variant, variantIndex) => (
-              <Box key={variantIndex} mb={2}>
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                  {variant.optionSelectRequestDtoList.map((opt, optIndex) => (
-                    <FormControl key={optIndex} variant="outlined" margin="normal" fullWidth>
-                      <InputLabel>{opt.nameOption}</InputLabel>
-                      <Select
-                        value={opt.valueOption}
-                        onChange={(e) =>
-                          handleVariantOptionChange(variantIndex, optIndex, 'valueOption', e.target.value)
-                        }
-                        label={opt.nameOption}
-                      >
-                        <MenuItem value="">Chọn một giá trị</MenuItem>
-                        {data.optionRequestDtoList
-                          .find((attribute) => attribute.name === opt.nameOption)
-                          ?.productOptionValues.map((val, i) => (
-                            <MenuItem key={i} value={val.value}>
-                              {val.value}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                    </FormControl>
-                  ))}
-                  <TextField
-                    label="Số lượng"
-                    value={variant.quantity}
-                    onChange={(e) => handleVariantChange(variantIndex, 'quantity', e.target.value)}
-                    type="number"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                  />
-                  <TextField
-                    label="Giá tiền"
-                    value={variant.price}
-                    onChange={(e) => handleVariantChange(variantIndex, 'price', e.target.value)}
-                    type="number"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                  />
-                  <IconButton
-                    onClick={() => removeVariant(variantIndex)}
-                    color="secondary"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-              </Box>
-            ))}
-            <Button
-              onClick={addVariant}
-              variant="contained"
-              color="primary"
-            >
-              + Thêm
-            </Button>
-          </Box>
-          <Box mt={4} display="flex" justifyContent="flex-end">
+                                </select>
+                            </div>
+                            <div className="w-1/2 mb-4 ml-4">
+                                <label className="block text-sm font-medium text-gray-700">Discount</label>
+                                <select
+                                    {...register('discountId', { required: true })}
+                                    id="discountId"
+                                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                                >
+                                    <option value=''></option>
+                                    {coupcons?.map((coupcon, index) => (
+                                        <If isTrue={coupcon.discountStatus === 'Active'} key={index}>
+                                            <option key={coupcon.id} value={coupcon.id}>{coupcon.discountPercent}</option>
+                                        </If>
 
-          </Box>
-          <Box mt={4} display="flex" justifyContent="flex-end">
-            <div className='mr-4'>
-              <Button
-                className='mr-5'
-                variant="contained"
-                color="error"
-                onClick={onClose}
-              >
-                Đóng
-              </Button>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="dropzone" className="block mb-2 text-sm font-medium text-gray-700">Upload Images</label>
+                            <div className='p-4 border-2 border-gray-300 rounded-lg hover:cursor-pointer'>
+                                <div {...getRootProps({ className: 'dropzone mt-1' })}>
+                                    <input {...getInputProps()} />
+                                    <p className=''>Drag 'n' drop some files here, or click to select files</p>
+                                </div>
+                                <div className="flex mt-2">
+                                    {fileInputs?.map((file, index) => (
+                                        <div key={index} className="relative mr-2">
+                                            <img src={file.imageUrl || file.preview} alt={file.name} className="object-cover w-20 h-20 rounded-lg" />
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveFile(file)}
+                                                className="absolute top-0 right-0 p-1 bg-white rounded-full shadow"
+                                            >
+                                                <DeleteIcon className="text-red-500" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                        </div>
+                        <div className="flex flex-row-reverse gap-5 mt-5">
+                            <button
+                                type="submit"
+                                className="p-2 px-6 bg-white border-2 text-dark-purple hover:bg-dark-purple hover:text-white border-dark-purple rounded-2xl"
+                            >
+                                Save
+                            </button>
+                            <button
+                                type="button"
+                                onClick={props.onClose}
+                                className="p-2 px-6 text-red-500 bg-white border-2 border-red-500 hover:text-white hover:bg-red-500 rounded-2xl"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <Button
-              onClick={() => {
-                handleSubmit();
-                onClose();
-
-              }}
-              // type="submit"
-              variant="contained"
-              color="success"
-            >
-              Lưu
-            </Button>
-          </Box>
-        </form>
-      </Box>
-    </Container>
-  );
-};
-
-export default UpdateProductPage;
+        );
+    } else {
+        return null;
+    }
+}

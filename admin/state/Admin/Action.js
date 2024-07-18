@@ -482,7 +482,7 @@ export const updateProduct = (req) => async (dispatch) => {
 
     if (req.multipartFiles) {
       req.multipartFiles.forEach((file, index) => {
-        formData.append("multipartFiles", file, file.name);
+        formData.append(`multipartFiles[${index}]`, file);
       });
     }
       

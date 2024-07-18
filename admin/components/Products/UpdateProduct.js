@@ -10,7 +10,6 @@ import { If } from 'react-haiku';
 export default function UpdateProduct(props) {
     const dispatch = useDispatch();
     const productT = useSelector((state) => state.product?.product)
-    console.log(productT)
     const {
         register,
         handleSubmit,
@@ -73,6 +72,7 @@ export default function UpdateProduct(props) {
     const onSubmit = async (formData) => {
         formData.id = productT?.displayProductDTO.id
         formData.imageIdDelete = imageIdDelete.join(',')
+        console.log(imageIdDelete)
         const submitData = {
             ...formData,
             multipartFiles: fileInputs,
@@ -224,7 +224,7 @@ export default function UpdateProduct(props) {
                                 <div className="flex mt-2">
                                     {fileInputs?.map((file, index) => (
                                         <div key={index} className="relative mr-2">
-                                            <img src={file.imageUrl} alt={file.name} className="object-cover w-20 h-20 rounded-lg" />
+                                            <img src={file.imageUrl || file.preview} alt={file.name} className="object-cover w-20 h-20 rounded-lg" />
                                             <button
                                                 type="button"
                                                 onClick={() => handleRemoveFile(file)}
