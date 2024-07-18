@@ -29,7 +29,7 @@ export default function MembersTable() {
               <tr className="">
                 <th
                   scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-base font-semibold text-gray-900 sm:pl-6 w-2/12"
+                  className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                 >
                   No.
                 </th>
@@ -38,6 +38,18 @@ export default function MembersTable() {
                   className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                 >
                   Member's username
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                >
+                  Member's email
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                >
+                  Status
                 </th>
                 <th
                   scope="col"
@@ -54,11 +66,17 @@ export default function MembersTable() {
 
                   <>
                     <tr key={index} className="">
-                      <td className="py-4 pr-10 text-base font-medium text-left text-gray-900 whitespace-nowrap sm:pl-6 ">
+                      <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                         {index + 1}
                       </td>
                       <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                         {data.userName}
+                      </td>
+                      <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
+                        {data.email}
+                      </td>
+                      <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
+                        {data.accountStatus}
                       </td>
                       <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                         {data.roleName}

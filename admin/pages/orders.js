@@ -12,7 +12,7 @@ export default function brands() {
                     <div className="sm:flex sm:items-center">
                         <div className="flex sm:flex-auto">
                             <h1 className="mt-1 text-xl font-semibold text-gray-900">
-                                Danh sách các nhãn hàng
+                                Brand List
                             </h1>
                         </div>
                     </div>

@@ -33,10 +33,10 @@ const UpdateBrand = (props) => {
       <div id="root">
         <div className="absolute w-3/5 px-10 py-5 mt-4 -translate-x-1/2 -translate-y-1/2 bg-white min-w-fit top-1/2 left-1/2 rounded-xl">
           <h3 className="mb-4 text-xl font-semibold tracking-wide">
-            Thêm nhãn hàng mới
+            Add Brand
           </h3>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <label className="block">Tên nhãn hàng</label>
+            <label className="block">Brand's Name</label>
             <input
               className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
               {...register("name", { required: true })}
