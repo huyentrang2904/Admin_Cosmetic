@@ -78,7 +78,10 @@ import {
   RESET_PASSWORD_FAILURE,
   GET_ORDER_BY_ID_SUCCESS,
   GET_ORDER_BY_ID_REQUEST,
-  GET_ORDER_BY_ID_FAILURE
+  GET_ORDER_BY_ID_FAILURE,
+  GET_SINGLE_ROLE_FAILURE,
+  GET_SINGLE_ROLE_REQUEST,
+  GET_SINGLE_ROLE_SUCCESS
 } from "./ActionType";
 
 const initialState = {
@@ -87,6 +90,7 @@ const initialState = {
 };
 export const adminReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_SINGLE_ROLE_REQUEST:
     case RESET_PASSWORD_REQUEST:
     case CHANGE_ACCOUNT_STATUS_REQUEST:
     case REMOVE_ACCOUNT_REQUEST:
@@ -115,6 +119,13 @@ export const adminReducer = (state = initialState, action) => {
     case DELETE_ROLE_SUCCESS:
     case GET_ALL_PRODUCT_REQUEST:
       return { ...state, isLoading: true, error: null };
+    case GET_SINGLE_ROLE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        error: null,
+        UserRole: action.payload,
+      };
     case GET_ALL_PRODUCT_SUCCESS:
       return {
         ...state,
@@ -213,6 +224,7 @@ export const adminReducer = (state = initialState, action) => {
         error: null,
         allUser: action.payload,
       };
+    case GET_SINGLE_ROLE_FAILURE:
     case RESET_PASSWORD_FAILURE:
     case CHANGE_ACCOUNT_STATUS_FAILURE:
     case REMOVE_ACCOUNT_FAILURE:

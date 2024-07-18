@@ -10,12 +10,19 @@ const AddCoupcon = (props) => {
     register,
     handleSubmit,
     formState: { errors },
+    watch
   } = useForm();
+  const applyToOrder = watch("applyToOrder");
   const onSubmit = (data) => {
-    dispatch(addNewCoupcon(data));
-    setTimeout(() => {
+    if (data.applyToOrder) {
+      data.applyTo = 'Order'
+      delete data.applyToOrder
+    }
+    dispatch(addNewCoupcon(data)).then((value) => {
       dispatch(getAllCoupcon());
-    }, 1000);
+      setTimeout(props.onClose, 200);
+    });
+
   };
   // Call your save function here with the brand name
   // Example: props.onSave(brand);
@@ -57,7 +64,7 @@ const AddCoupcon = (props) => {
                 )}
               </div>
             </div>
-            <div className="flex">
+            <div className="flex mt-2">
               <div className="w-1/2 mr-4">
 
                 <label className="block">Start date</label>
@@ -86,12 +93,28 @@ const AddCoupcon = (props) => {
                 )}
               </div>
             </div>
-
+            <div className="flex items-center mt-4">
+              <input
+                type="checkbox"
+                {...register("applyToOrder")}
+                className="mr-2"
+              />
+              <label htmlFor="applyToOrder" className="text-sm">
+                Apply to Order
+              </label>
+            </div>
+            {applyToOrder && (
+              <div className="mt-4">
+                <label className="block">Min Amount</label>
+                <input
+                  type="number"
+                  className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                  {...register("minAmount")}
+                />
+              </div>
+            )}
             <div className="flex flex-row-reverse gap-5 mt-5">
               <button
-                onClick={() => {
-                  setTimeout(props.onClose, 200);
-                }}
                 type="submit"
                 className="p-2 px-6 bg-white border-2 text-dark-purple hover:bg-dark-purple hover:text-white border-dark-purple rounded-2xl"
               >

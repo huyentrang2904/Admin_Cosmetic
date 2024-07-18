@@ -3,7 +3,6 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
-  LOGOUT,
   REGISTER_FAILURE,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
@@ -11,6 +10,7 @@ import {
   CHANGE_PASSWORD_REQUEST,
   CHANGE_PASSWORD_SUCCESS
 } from "./ActionType";
+import { getSingleRole } from "../Admin/Action";
 import { API_BASE_URL, api } from "@/config/apiConfig";
 import { toast } from "react-toastify";
 
@@ -39,6 +39,9 @@ export const login = (userData) => async (dispatch) => {
     const user = response.data;
     localStorage.setItem('userInformation', JSON.stringify(user))
     localStorage.setItem('userToken', JSON.stringify(user.accessToken))
+    if (user) {
+      dispatch(getSingleRole())
+    }
     toast.success("Login successfully!");
     dispatch({ type: LOGIN_SUCCESS, payload: user });
     window.location = "/dashboard";

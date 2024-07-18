@@ -3,6 +3,8 @@ import { getAllCoupcon } from "@/state/Admin/Action";
 import { useState, useEffect } from "react";
 import BasicModal from "../Modal/BasicModal";
 import DeleteCoupcon from "./DeleteCoupcon";
+import UpdateCoupcon from "./UpdateCoupcon";
+import ViewCoupcon from "./ViewCoupcon";
 
 export default function CoupconsTable() {
   const dispatch = useDispatch();
@@ -10,6 +12,7 @@ export default function CoupconsTable() {
   console.log(brands)
   const [openDelete, setOpenDelete] = useState(false)
   const [openUpdate, setOpenUpdate] = useState(false)
+  const [openView, setOpenView] = useState(false)
   const [id, setId] = useState()
   const [initB, setInitB] = useState()
 
@@ -79,6 +82,13 @@ export default function CoupconsTable() {
                     <td className="flex px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                       <button
                         onClick={() => {
+                          setOpenView(true);
+                          setInitB(data);
+                        }}
+                        className="px-2 py-1 mr-4 text-sm border-2 rounded-full border-dark-purple hover:cursor-pointer hover:bg-dark-purple hover:text-white text-dark-purple"
+                      >View</button>
+                      <button
+                        onClick={() => {
                           setOpenUpdate(true);
                           setInitB(data);
                         }}
@@ -102,13 +112,20 @@ export default function CoupconsTable() {
           <BasicModal open={openDelete} onClose={() => setOpenDelete(false)}>
             <DeleteCoupcon onClose={() => setOpenDelete(false)} data={id} />
           </BasicModal>
-          {/* <BasicModal open={openUpdate} onClose={() => setOpenUpdate(false)}>
-            <UpdateCategory
+          <BasicModal open={openUpdate} onClose={() => setOpenUpdate(false)}>
+            <UpdateCoupcon
               open={openUpdate}
               onClose={() => setOpenUpdate(false)}
               brand={initB}
             />
-          </BasicModal> */}
+          </BasicModal>
+          <BasicModal open={openView} onClose={() => setOpenView(false)}>
+            <ViewCoupcon
+              open={openView}
+              onClose={() => setOpenView(false)}
+              brand={initB}
+            />
+          </BasicModal>
 
         </div>
       </div>

@@ -87,6 +87,9 @@ import {
   CREATE_ROLE_SUCCESS,
   CREATE_ROLE_FAILURE,
   CREATE_ROLE_REQUEST,
+  GET_SINGLE_ROLE_FAILURE,
+  GET_SINGLE_ROLE_REQUEST,
+  GET_SINGLE_ROLE_SUCCESS
 } from "./ActionType";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -236,6 +239,16 @@ export const getAllRole = () => async (dispatch) => {
   }
 }
 
+export const getSingleRole = (id) => async (dispatch) => {
+  dispatch({ type: GET_SINGLE_ROLE_REQUEST });
+  try {
+    const { data } = await api.get(`admin/role/${id}`);
+    dispatch({ type: GET_SINGLE_ROLE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: GET_SINGLE_ROLE_FAILURE, payload: error.message });
+  }
+}
+
 export const createRole = (req) => async (dispatch) => {
   dispatch({ type: CREATE_ROLE_REQUEST });
   
@@ -314,16 +327,16 @@ export const deleteCoupcon = (id) => async (dispatch) => {
 };
 
 export const updateCoupcon = (req) => async (dispatch) => {
-  const { id, ...data_t } = req;
   dispatch({ type: UPDATE_COUPCON_REQUEST });
   try {
-    const { data } = await api.put(`admin/coupons/update/${req.id}`, data_t);
+    const { data } = await api.put(`admin/discount/update`, req);
     dispatch({ type: UPDATE_COUPCON_SUCCESS, payload: data });
-    toast.success("Sửa thành công");
+    toast.success("Update successfully");
     // setTimeout(refresh, 1000);
   } catch (e) {
     dispatch({ type: UPDATE_COUPCON_FAILURE, payload: e });
-    console.log(e);
+    console.log(e)
+    toast.error('Failed')
   }
 };
 

@@ -37,8 +37,8 @@ const UpdateStatus = (props) => {
               {...register("status", { required: true })}
             >
               <option value="Đặt hàng thành công.">1. ORDER PLACED SUCCESS</option>
-              <option value="Đơn hàng đã bị hủy.">2. ORDER CANCELLED</option>
-              <option value="Người bán đang chuẩn bị hàng.">3. SELLER PREPARING ORDER</option>
+              <option value="Người bán đang chuẩn bị hàng.">2. SELLER PREPARING ORDER</option>
+              <option value="Đơn hàng đã bị hủy.">3. ORDER CANCELLED</option>
               <option value="Đang giao hàng.">4. IN TRANSIT</option>
               <option value="Giao hàng thành công.">5. DELIVERY SUCCESSFUL</option>
               <option value="Giao hàng không thành công.">6. DELIVERY FAILED</option>
