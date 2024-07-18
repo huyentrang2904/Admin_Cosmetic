@@ -210,7 +210,7 @@ export const updateOrderStatus = (req) => async (dispatch) => {
 export const getDataAnalytic = () => async (dispatch) => {
   dispatch({ type: GET_ANALYTIC_REQUEST });
   try {
-    const { data } = await api.get(`/admin/analytic/`);
+    const { data } = await api.get(`admin/statistical/2024`);
     console.log(data)
     dispatch({ type: GET_ANALYTIC_SUCCESS, payload: data });
     return data;
@@ -242,7 +242,9 @@ export const getAllRole = () => async (dispatch) => {
 export const getSingleRole = (id) => async (dispatch) => {
   dispatch({ type: GET_SINGLE_ROLE_REQUEST });
   try {
-    const { data } = await api.get(`admin/role/${id}`);
+    const response = await api.get(`admin/role/${id}`);
+    const role = response.data;
+    localStorage.setItem('UserRole', JSON.stringify(role))
     dispatch({ type: GET_SINGLE_ROLE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_SINGLE_ROLE_FAILURE, payload: error.message });
