@@ -77,7 +77,7 @@ export default function OrdersTable() {
                       {data.fullName}
                     </td>
                     <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
-                      {data.totalCost}
+                      {data.totalCost.toFixed(2)}
                     </td>
                     <td className="px-3 py-4 text-base text-gray-500 whitespace-nowrap">
                       {statusList[data.paymentMethod]}

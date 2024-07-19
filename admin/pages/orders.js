@@ -11,7 +11,7 @@ export default function Orders() {
                     <div className="sm:flex sm:items-center">
                         <div className="flex sm:flex-auto">
                             <h1 className="mt-1 text-xl font-semibold text-gray-900">
-                                Brand List
+                                Orders List
                             </h1>
                         </div>
                     </div>
